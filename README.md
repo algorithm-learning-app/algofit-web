@@ -22,3 +22,15 @@ npm run dev
 | `npm run preview` | 빌드 결과 미리보기 |
 
 게스트 진행: `localStorage` (`algofit:guestProgress`, `algofit:guestId`).
+
+## PR 리뷰 (로컬 봇)
+
+변경은 보통 `main`에 직접 푸시합니다. PR을 열었을 때:
+
+```bash
+export PR_REVIEW_BASE=main
+export PR_REVIEW_CHECK_COMMAND="$(git rev-parse --show-toplevel)/scripts/pr-review-check.sh"
+python3 ~/.codex/skills/gh-review-pr/scripts/review_pr.py --pr-url <NUMBER>
+```
+
+검증만: `./scripts/pr-review-check.sh` (`npm run build`). 상세: [algofit-docs · 20-pr-review-setup](https://github.com/algorithm-learning-app/algofit-docs/blob/main/docs/20-pr-review-setup.md).
