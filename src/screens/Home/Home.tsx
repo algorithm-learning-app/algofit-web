@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from '../../components/BottomNav';
-import { loadProgress, type GuestProgress } from '../../lib/progress';
+import { ensureGuestId, loadProgress, type GuestProgress } from '../../lib/progress';
 import './Home.css';
 
 export default function Home() {
@@ -95,6 +95,25 @@ export default function Home() {
 
           <Link to="/daily" className="btn-primary daily-card__cta">
             {progress.todayDailyCompleted ? '결과 보기' : progress.dailyProgress > 0 ? '이어하기' : '시작하기'}
+          </Link>
+        </section>
+
+        <section className="handoff-card" aria-labelledby="handoff-title">
+          <h2 id="handoff-title" className="handoff-card__title">
+            모바일 ↔ PC 연결
+          </h2>
+          <p className="handoff-card__desc">
+            모바일 게스트 ID로 PC에서 Daily·보너스를 이어할 수 있어요. 아래 링크를 PC
+            브라우저에서 열거나 QR로 공유하세요.
+          </p>
+          <p className="handoff-card__id">
+            guestId: <code>{ensureGuestId()}</code>
+          </p>
+          <Link
+            to={`/continue?token=${encodeURIComponent(ensureGuestId())}`}
+            className="handoff-card__link"
+          >
+            PC 이어하기 페이지 열기 →
           </Link>
         </section>
 

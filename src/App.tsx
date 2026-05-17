@@ -1,6 +1,7 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './screens/Home/Home';
 import DailyChallenge from './screens/Daily/DailyChallenge';
+import Continue from './screens/Continue/Continue';
 import PcBonusChallenge from './screens/PcBonus/PcBonusChallenge';
 import './App.css';
 
@@ -19,6 +20,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/continue" element={<Continue />} />
         <Route path="/daily" element={<DailyChallenge />} />
         <Route path="/daily/complete" element={<DailyChallenge />} />
         <Route path="/daily/:step/feedback" element={<DailyChallenge />} />

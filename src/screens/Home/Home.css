@@ -185,6 +185,40 @@
   margin-top: 0;
 }
 
+.handoff-card {
+  padding: var(--space-16);
+  border-radius: var(--radius-lg, 16px);
+  background: var(--color-surface, #1e293b);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.handoff-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.handoff-card__desc {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+
+.handoff-card__id {
+  font-size: 0.8rem;
+  margin: 0 0 12px;
+  word-break: break-all;
+}
+
+.handoff-card__link {
+  display: inline-block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary, #2dd4bf);
+  text-decoration: none;
+}
+
 .pc-bonus-card {
   display: flex;
   align-items: center;
