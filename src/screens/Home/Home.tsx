@@ -102,7 +102,11 @@ export default function Home() {
           <span className="pc-bonus-card__badge">보너스</span>
           <div className="pc-bonus-card__body">
             <p className="pc-bonus-card__title">PC에서 추가 XP</p>
-            <p className="pc-bonus-card__desc">스트릭 조건과 무관 · 선택 참여</p>
+            <p className="pc-bonus-card__desc">
+              {progress.todayPcBonusCompleted
+                ? '오늘 보너스 완료 · +50 XP'
+                : '긴 빈칸 1문제 · +50 XP · 선택 참여'}
+            </p>
           </div>
           <span className="pc-bonus-card__arrow" aria-hidden>
             →

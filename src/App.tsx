@@ -1,6 +1,7 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './screens/Home/Home';
 import DailyChallenge from './screens/Daily/DailyChallenge';
+import PcBonusChallenge from './screens/PcBonus/PcBonusChallenge';
 import './App.css';
 
 function Placeholder({ title }: { title: string }) {
@@ -24,7 +25,11 @@ export default function App() {
         <Route path="/daily/:step" element={<DailyChallenge />} />
         <Route path="/learn" element={<Placeholder title="학습 (준비 중)" />} />
         <Route path="/profile" element={<Placeholder title="프로필 (준비 중)" />} />
-        <Route path="/pc-bonus" element={<Placeholder title="PC 보너스 (준비 중)" />} />
+        <Route path="/pc-bonus" element={<PcBonusChallenge />} />
+        <Route path="/pc-bonus/feedback" element={<PcBonusChallenge />} />
+        <Route path="/pc-bonus/complete" element={<PcBonusChallenge />} />
+        <Route path="/pc/bonus" element={<PcBonusChallenge />} />
+        <Route path="/bonus" element={<PcBonusChallenge />} />
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </div>
