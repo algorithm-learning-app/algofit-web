@@ -1,0 +1,37 @@
+:root {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-primary: #2dd4bf;
+  --color-streak: #f97316;
+  --color-xp: #fbbf24;
+  --color-text: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-pc-accent: #a78bfa;
+  --color-success: #34d399;
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --max-width: 390px;
+}
+
+.app-shell {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  display: flex;
+  justify-content: center;
+}
+
+.placeholder {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-24);
+  text-align: center;
+}
+
+.placeholder a {
+  color: var(--color-primary);
+}
