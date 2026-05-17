@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "type": "pick",
+  "updatedAt": "2026-05-19",
+  "questions": [
+    {
+      "id": "pick_arr_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "길이 n인 정수 배열에서 연속된 구간의 합이 target 이하인 **가장 긴 구간 길이**를 구합니다. 배열 원소는 음수일 수 있습니다. 추가 메모리를 O(1)에 가깝게 쓰려면 어떤 접근이 먼저 떠오르나요?",
+      "tags": ["array"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "왼쪽·오른쪽 인덱스로 구간을 넓히거나 줄이는 슬라이딩 윈도우" },
+        { "id": "c2", "label": "정렬된 배열에서 이분 탐색만" },
+        { "id": "c3", "label": "스택으로 괄호 짝 맞추기" },
+        { "id": "c4", "label": "BFS로 격자 최단 경로" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "연속 구간 합·길이 문제는 보통 배열 위에서 두 포인터로 윈도우를 조절합니다. 이분 탐색은 정렬·단조 경계에, BFS는 그래프 거리에 쓰입니다."
+    },
+    {
+      "id": "pick_arr_003",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "이미 **오름차순 정렬된** 배열에서 값 x의 **첫 등장 인덱스**(없으면 삽입 위치)를 O(log n)에 찾으려 합니다. 가장 적합한 방법은?",
+      "tags": ["array", "binary_search"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "이분 탐색으로 lower bound 찾기" },
+        { "id": "c2", "label": "양끝 투 포인터로 합 맞추기" },
+        { "id": "c3", "label": "해시로 빈도만 세기" },
+        { "id": "c4", "label": "스택으로 LIFO 처리" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "정렬된 배열에서 경계·첫 위치는 이분 탐색이 전형적입니다. 투 포인터는 보통 두 수의 합·구간 문제에, 해시는 정렬 없이 조회할 때 유리합니다."
+    },
+    {
+      "id": "pick_tp_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "오름차순 배열에서 **중복을 제거한 길이**를 in-place로 줄이고, 앞쪽만 유효 구간으로 남깁니다. O(n) 시간에 처리하려면?",
+      "tags": ["two_pointer"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "느린·빠른 포인터로 유니크 원소만 앞으로 모으기" },
+        { "id": "c2", "label": "이분 탐색으로 target 하나 찾기" },
+        { "id": "c3", "label": "BFS로 레벨 순회" },
+        { "id": "c4", "label": "스택으로 후위 표현식" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "정렬되어 있으면 인접 중복은 두 포인터(또는 쓰기·읽기 인덱스)로 한 번에 걸러낼 수 있습니다. 이분 탐색은 단일 값 검색용입니다."
+    },
+    {
+      "id": "pick_hash_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "문자열 배열에서 **서로 다른 문자** 개수를 세고, 어떤 문자가 몇 번 나왔는지 빠르게 조회하려 합니다. 보조 자료구조로 무엇이 적절할까요?",
+      "tags": ["hash"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "딕셔너리(해시 맵)로 문자 → 빈도" },
+        { "id": "c2", "label": "스택으로 역순 출력만" },
+        { "id": "c3", "label": "이분 탐색으로 정렬된 구간만" },
+        { "id": "c4", "label": "BFS로 최단 거리" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "빈도·존재 여부를 키 단위로 O(1)에 다루려면 해시 맵이 맞습니다. 스택·BFS는 순서·그래프 탐색용입니다."
+    },
+    {
+      "id": "pick_bs_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "회전된 정렬 배열(원래 오름차순이 한 번 잘려 이어붙인 형태)에서 **최솟값**을 O(log n)에 찾습니다. 전제에 맞는 방법은?",
+      "tags": ["binary_search"],
+      "difficulty": 3,
+      "choices": [
+        { "id": "c1", "label": "구간이 어느 쪽이 정렬됐는지 보며 이분 탐색" },
+        { "id": "c2", "label": "양끝 투 포인터로 두 수의 합" },
+        { "id": "c3", "label": "해시로 complement만 저장" },
+        { "id": "c4", "label": "큐 BFS로 레벨 탐색" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "회전 정렬 배열은 중간과 끝을 비교해 어느 half가 정렬됐는지 가르는 이분 탐색이 전형적입니다. 투 포인터·해시는 이 최솟값 문제의 첫 선택이 아닙니다."
+    },
+    {
+      "id": "pick_stack_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "괄호 `()[]{}`만 들어 있는 문자열이 **올바르게 닫혔는지** 검사합니다. 마지막에 연 괄호를 먼저 닫아야 하므로 어떤 자료구조가 자연스러울까요?",
+      "tags": ["stack"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "스택으로 열린 괄호 push, 닫힐 때 짝 검사" },
+        { "id": "c2", "label": "BFS로 격자 최단 경로" },
+        { "id": "c3", "label": "이분 탐색으로 lower bound" },
+        { "id": "c4", "label": "해시로 두 수의 합" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "LIFO인 스택이 괄호 짝 맞추기의 표준입니다. BFS·이분·해시는 이 제약(최근 열림 먼저 닫기)과 맞지 않습니다."
+    },
+    {
+      "id": "pick_arr_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "길이 n인 배열에서 모든 원소를 한 번씩만 보며 최댓값을 구하려 합니다. 추가 메모리를 거의 쓰지 않으려면 어떤 접근이 가장 자연스러울까요?",
+      "tags": ["array"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "배열을 한 번 순회하며 현재까지의 최댓값 갱신" },
+        { "id": "c2", "label": "배열을 정렬한 뒤 맨 앞 원소 선택" },
+        { "id": "c3", "label": "해시 테이블에 빈도를 저장" },
+        { "id": "c4", "label": "BFS로 탐색" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "최댓값은 전 원소를 한 번 훑으며 max를 갱신하면 O(n)입니다."
+    },
+    {
+      "id": "pick_arr_004",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "정렬되지 않은 배열에서 두 수의 합이 target인 쌍을 찾을 때, **모든 쌍을 직접** 비교하는 방법의 시간 복잡도는 대략 얼마인가요?",
+      "tags": ["array"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "O(n²) — 이중 루프" },
+        { "id": "c2", "label": "O(log n) — 이분 탐색만" },
+        { "id": "c3", "label": "O(1) — 해시 없이도" },
+        { "id": "c4", "label": "O(n log n) — BFS" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "완탐은 이중 루프로 O(n²)입니다. 해시·투 포인터로 개선할 수 있습니다."
+    },
+    {
+      "id": "pick_tp_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "**오름차순 정렬된** 배열에서 두 수의 합이 target이 되는 서로 다른 두 인덱스를 찾습니다. 가장 먼저 떠오르는 방법은?",
+      "tags": ["two_pointer"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "투 포인터 (양끝에서 좁히기)" },
+        { "id": "c2", "label": "이분 탐색만 단독" },
+        { "id": "c3", "label": "스택으로 중위 표현식" },
+        { "id": "c4", "label": "BFS 레벨 순회" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "정렬된 배열의 두 수 합은 양끝 투 포인터가 전형적입니다."
+    },
+    {
+      "id": "pick_tp_003",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "음수가 없는 배열에서 **연속 부분 배열의 합**이 target 이하인 가장 긴 길이를 구합니다. 윈도우를 넓히거나 줄일 때 쓰는 패턴은?",
+      "tags": ["two_pointer"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "슬라이딩 윈도우(두 포인터)" },
+        { "id": "c2", "label": "스택만으로 LIFO" },
+        { "id": "c3", "label": "해시로 complement만" },
+        { "id": "c4", "label": "이분 탐색으로 회전 배열" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "연속 구간 길이·합 문제는 윈도우를 조절하는 슬라이딩 윈도우가 맞습니다."
+    },
+    {
+      "id": "pick_hash_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "정렬되지 않은 배열에서 target = a[i] + a[j]인 인덱스 한 쌍을 O(n)에 가깝게 찾고 싶습니다. 보조 자료구조로 무엇이 적절할까요?",
+      "tags": ["hash"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "해시 테이블 (값 → 인덱스)" },
+        { "id": "c2", "label": "스택" },
+        { "id": "c3", "label": "큐만 사용한 BFS" },
+        { "id": "c4", "label": "세그먼트 트리" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "순회하며 complement가 해시에 있는지 보면 평균 O(n)입니다."
+    },
+    {
+      "id": "pick_hash_003",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "문자열에서 각 문자가 몇 번 나왔는지 세려 합니다. Python에서 가장 흔한 자료구조는?",
+      "tags": ["hash"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "딕셔너리 또는 Counter" },
+        { "id": "c2", "label": "스택만" },
+        { "id": "c3", "label": "이분 탐색 트리만" },
+        { "id": "c4", "label": "BFS 큐만" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "빈도·존재 여부는 해시 맵(또는 Counter)이 표준입니다."
+    },
+    {
+      "id": "pick_bs_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "이미 오름차순 정렬된 배열 nums에서 값 x의 존재 여부만 빠르게 확인하려 합니다. 가장 적절한 알고리즘은?",
+      "tags": ["binary_search"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "이분 탐색" },
+        { "id": "c2", "label": "해시로 빈도만 세기" },
+        { "id": "c3", "label": "스택으로 괄호 검사" },
+        { "id": "c4", "label": "완전 탐색만 가능" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "정렬된 배열에서 값 하나를 찾는 기본 도구는 이분 탐색 O(log n)입니다."
+    },
+    {
+      "id": "pick_bfs_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "2차원 격자에서 시작 칸에서 목표 칸까지의 최소 칸 수(4방향, 벽 #)를 구합니다. 가장 먼저 시도할 탐색은?",
+      "tags": ["bfs"],
+      "difficulty": 2,
+      "choices": [
+        { "id": "c1", "label": "BFS (너비 우선)" },
+        { "id": "c2", "label": "배열 이분 탐색" },
+        { "id": "c3", "label": "투 포인터만" },
+        { "id": "c4", "label": "스택으로만 해결" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "가중치 없는 격자에서 최단 칸 수는 BFS가 표준입니다."
+    },
+    {
+      "id": "pick_arr_005",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "배열 nums의 **누적합(prefix sum)** 배열을 만들 때, `prefix[i]`가 의미하는 것으로 가장 맞는 설명은?",
+      "tags": ["array"],
+      "difficulty": 1,
+      "choices": [
+        { "id": "c1", "label": "nums[0]부터 nums[i]까지의 합" },
+        { "id": "c2", "label": "nums[i] 하나만" },
+        { "id": "c3", "label": "정렬된 배열에서의 위치" },
+        { "id": "c4", "label": "BFS 큐의 깊이" }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "prefix[i]는 인덱스 0~i 구간 합으로, 구간 합 질의를 O(1)에 답하는 데 쓰입니다."
+    }
+  ]
+}

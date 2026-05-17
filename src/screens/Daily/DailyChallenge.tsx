@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { DAILY_TOTAL, getDailyQuestion } from '../../lib/daily';
+import { DAILY_TOTAL, getDailyQuestion, type DailyQuestion as DailyQuestionData } from '../../lib/daily';
 import {
   advanceAfterFeedback,
   completeDailyChallenge,
@@ -15,6 +15,10 @@ import DailyComplete from './DailyComplete';
 import DailyFeedback from './DailyFeedback';
 import DailyQuestion from './DailyQuestion';
 import './Daily.css';
+
+function feedbackMessage(question: DailyQuestionData, isCorrect: boolean): string {
+  return isCorrect ? question.feedbackCorrect : question.feedbackWrong;
+}
 
 type CompleteSnapshot = {
   allCorrect: boolean;
@@ -135,11 +139,9 @@ export default function DailyChallenge() {
 
   const question = getDailyQuestion(stepNumber - 1);
   const isCorrect = session.lastAnswerCorrect === true;
-  const feedbackMessage =
+  const feedbackText =
     question && session.lastAnswerCorrect !== null
-      ? session.lastAnswerCorrect
-        ? question.feedbackCorrect
-        : question.feedbackWrong
+      ? feedbackMessage(question, session.lastAnswerCorrect)
       : '';
 
   return (
@@ -180,7 +182,7 @@ export default function DailyChallenge() {
         {isFeedbackRoute && session.awaitingFeedback ? (
           <DailyFeedback
             isCorrect={isCorrect}
-            message={feedbackMessage}
+            message={feedbackText}
             onContinue={handleFeedbackContinue}
           />
         ) : (
