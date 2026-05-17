@@ -1,0 +1,39 @@
+{
+  "id": "pc_bonus_bfs_long_001",
+  "title": "PC 보너스 · 긴 빈칸",
+  "question": {
+    "id": "blank_bfs_001",
+    "type": "blank",
+    "version": 1,
+    "language": "python",
+    "stem": "2차원 격자에서 시작 칸에서 목표 칸까지의 최소 이동 칸 수를 구합니다. 아래 BFS 코드의 빈칸을 채우세요.",
+    "tags": ["bfs"],
+    "difficulty": 3,
+    "codeTemplate": "from collections import deque\n\ndef shortest_path(grid, sr, sc, tr, tc):\n    rows, cols = len(grid), len(grid[0])\n    q = deque([(sr, sc, 0)])\n    visited = {(sr, sc)}\n    while q:\n        r, c, dist = q.popleft()\n        if (r, c) == (tr, tc):\n            return dist\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 0 and (nr, nc) not in visited:\n                {{b1}}\n                {{b2}}\n    return -1",
+    "blanks": [
+      {
+        "id": "b1",
+        "correctAnswers": ["visited.add((nr, nc))"],
+        "choices": [
+          "visited.add((nr, nc))",
+          "visited.add((r, c))",
+          "grid[nr][nc] = 1",
+          "q.clear()"
+        ]
+      },
+      {
+        "id": "b2",
+        "correctAnswers": ["q.append((nr, nc, dist + 1))"],
+        "choices": [
+          "q.append((nr, nc, dist + 1))",
+          "q.appendleft((nr, nc, dist))",
+          "q.pop()",
+          "return dist + 1"
+        ]
+      }
+    ],
+    "explanation": "BFS는 큐에서 꺼내며 거리를 1씩 늘립니다. 방문 표시 후 같은 거리 레벨이 큐에 들어가도록 append합니다.",
+    "feedbackCorrect": "정답! 방문 표시 후 큐에 다음 칸을 넣는 순서가 맞아요.",
+    "feedbackWrong": "BFS에서는 방문 처리와 큐 enqueue 순서를 다시 확인해 보세요."
+  }
+}
