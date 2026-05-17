@@ -1,4 +1,5 @@
 import { DAILY_TOTAL } from './daily';
+import { PC_BONUS_XP } from './pcBonus';
 
 const STORAGE_KEY = 'algofit:guestProgress';
 const GUEST_ID_KEY = 'algofit:guestId';
@@ -20,6 +21,9 @@ export type GuestProgress = {
   dailyBlankCount: number;
   hearts: number;
   world1Nodes: Array<'locked' | 'current' | 'cleared'>;
+  /** PC 보너스(긴 빈칸) 오늘 완료 여부 — 스트릭과 무관 */
+  todayPcBonusCompleted?: boolean;
+  lastPcBonusDate?: string | null;
 };
 
 export type DailySession = {
@@ -47,6 +51,8 @@ const DEFAULT_PROGRESS: Omit<GuestProgress, 'guestId'> = {
   dailyBlankCount: 2,
   hearts: 5,
   world1Nodes: ['cleared', 'current', 'locked', 'locked', 'locked'],
+  todayPcBonusCompleted: false,
+  lastPcBonusDate: null,
 };
 
 function createGuestId(): string {
@@ -104,6 +110,9 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
     world1Nodes: Array.isArray(parsed.world1Nodes)
       ? (parsed.world1Nodes as GuestProgress['world1Nodes'])
       : DEFAULT_PROGRESS.world1Nodes,
+    todayPcBonusCompleted: Boolean(parsed.todayPcBonusCompleted),
+    lastPcBonusDate:
+      typeof parsed.lastPcBonusDate === 'string' ? parsed.lastPcBonusDate : null,
   };
 }
 
@@ -117,6 +126,8 @@ function resetDailyIfNewDay(progress: GuestProgress, today: string): GuestProgre
     todayAllCorrect: false,
     dailyProgress: 0,
     hearts: 5,
+    todayPcBonusCompleted: false,
+    lastPcBonusDate: null,
   };
 }
 
@@ -260,5 +271,21 @@ export function completeDailyChallenge(
 
   saveProgress(next);
   saveDailySession(null);
+  return next;
+}
+
+export function completePcBonus(progress: GuestProgress): GuestProgress {
+  const today = getTodaySeoul();
+  if (progress.todayPcBonusCompleted && progress.lastPcBonusDate === today) {
+    return progress;
+  }
+
+  let next = addXp(progress, PC_BONUS_XP);
+  next = {
+    ...next,
+    todayPcBonusCompleted: true,
+    lastPcBonusDate: today,
+  };
+  saveProgress(next);
   return next;
 }
