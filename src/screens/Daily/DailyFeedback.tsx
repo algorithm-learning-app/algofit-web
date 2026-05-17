@@ -4,9 +4,19 @@ type Props = {
   isCorrect: boolean;
   message: string;
   onContinue: () => void;
+  xpAmount?: number | null;
+  continueLabel?: string;
 };
 
-export default function DailyFeedback({ isCorrect, message, onContinue }: Props) {
+export default function DailyFeedback({
+  isCorrect,
+  message,
+  onContinue,
+  xpAmount,
+  continueLabel = '다음',
+}: Props) {
+  const xp =
+    xpAmount === undefined ? DAILY_XP_PER_QUESTION : xpAmount;
   return (
     <div className="daily-feedback">
       <p className="daily-feedback__icon" aria-hidden>
@@ -20,9 +30,9 @@ export default function DailyFeedback({ isCorrect, message, onContinue }: Props)
         {isCorrect ? '정답!' : '오답'}
       </h2>
       <p className="daily-feedback__message">{message}</p>
-      <p className="daily-feedback__xp">+{DAILY_XP_PER_QUESTION} XP</p>
+      {xp !== null && <p className="daily-feedback__xp">+{xp} XP</p>}
       <button type="button" className="btn-primary" onClick={onContinue}>
-        다음
+        {continueLabel}
       </button>
     </div>
   );
