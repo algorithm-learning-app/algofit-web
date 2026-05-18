@@ -81,7 +81,7 @@ function withFeedback<T extends PickQuestion | BlankQuestion>(q: T): T {
   };
 }
 
-function loadQuestionPools(): QuestionPools {
+export function loadQuestionPools(): QuestionPools {
   const picks = (pickBundle.questions as PickQuestion[]).map(withFeedback);
   const blanks = (blankBundle.questions as BlankQuestion[]).map(withFeedback);
   return { picks, blanks };
