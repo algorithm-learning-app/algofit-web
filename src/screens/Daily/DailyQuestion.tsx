@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { effectiveCodeLanguage } from '../../lib/codeLanguage';
 import {
   checkBlankAnswer,
   checkPickAnswer,
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export default function DailyQuestion({ step, onSubmit }: Props) {
-  const question = getDailyQuestion(step - 1);
+  const question = getDailyQuestion(step - 1, new Date(), effectiveCodeLanguage());
   const [pickChoice, setPickChoice] = useState<string | null>(null);
   const [blankSelections, setBlankSelections] = useState<Record<string, string>>({});
 

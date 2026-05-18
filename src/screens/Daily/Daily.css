@@ -58,6 +58,16 @@
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.35);
 }
 
+.daily__lang-hint {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
 .daily__card {
   flex: 1;
   background: var(--color-surface);

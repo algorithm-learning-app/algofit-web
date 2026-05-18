@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BottomNav from '../../components/BottomNav';
-import { ensureGuestId, loadProgress, type GuestProgress } from '../../lib/progress';
+import { CODE_LANGUAGES } from '../../lib/codeLanguage';
+import {
+  ensureGuestId,
+  loadProgress,
+  setPreferredCodeLanguage,
+  type GuestProgress,
+} from '../../lib/progress';
 import './Profile.css';
 
 export default function Profile() {
@@ -90,6 +96,33 @@ export default function Profile() {
               <dd>{progress.hearts} / 5</dd>
             </div>
           </dl>
+        </section>
+
+        <section className="profile-card" aria-labelledby="lang-title">
+          <h2 id="lang-title" className="profile-card__title">
+            코드 언어
+          </h2>
+          <p className="profile-card__desc">
+            빈칸 채우기 문제의 코드 예시 언어입니다. 선택은 이 브라우저에 저장됩니다.
+          </p>
+          <div className="profile-lang-chips" role="radiogroup" aria-label="코드 언어">
+            {CODE_LANGUAGES.map((lang) => {
+              const selected =
+                (progress.preferredCodeLanguage ?? 'python') === lang.id;
+              return (
+                <button
+                  key={lang.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  className={`profile-lang-chip${selected ? ' profile-lang-chip--on' : ''}`}
+                  onClick={() => setProgress(setPreferredCodeLanguage(lang.id))}
+                >
+                  {lang.label}
+                </button>
+              );
+            })}
+          </div>
         </section>
 
         <section className="profile-card" aria-labelledby="handoff-title">

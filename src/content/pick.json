@@ -1554,6 +1554,1004 @@
       ],
       "correctChoiceId": "c1",
       "explanation": "연속 부분합 조건은 prefix와 해시 조합이 전형입니다. 스택·BFS·단일 이분은 이 subarray 제약과 맞지 않습니다."
+    },
+    {
+      "id": "pick_sort_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "정수 배열을 **오름차순**으로 정렬할 때, 평균 O(n log n)이 보장되는 비교 기반 정렬로 가장 흔히 쓰는 것은?",
+      "tags": [
+        "sorting"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "병합·퀵·힙 정렬 등 O(n log n)"
+        },
+        {
+          "id": "c2",
+          "label": "버블 정렬만 항상 최적"
+        },
+        {
+          "id": "c3",
+          "label": "BFS로 최단 경로"
+        },
+        {
+          "id": "c4",
+          "label": "해시로 two-sum만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "일반 목적 정렬은 merge/quick/heap이 O(n log n)입니다. 버블은 최악 O(n²)이고 BFS·해시는 정렬과 무관합니다."
+    },
+    {
+      "id": "pick_sort_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "거의 정렬된 배열을 **in-place**로 빠르게 정렬하려 합니다. 인접 원소를 교환하며 early stop하는 단순 방법은?",
+      "tags": [
+        "sorting"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "삽입 정렬(insertion sort)"
+        },
+        {
+          "id": "c2",
+          "label": "이분 탐색만"
+        },
+        {
+          "id": "c3",
+          "label": "단조 스택 NGE"
+        },
+        {
+          "id": "c4",
+          "label": "multi-source BFS"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "삽입 정렬은 거의 정렬된 입력에서 빠르게 동작합니다. 이분·스택·BFS는 정렬 알고리즘이 아닙니다."
+    },
+    {
+      "id": "pick_dp_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "피보나치 F(n)을 **중복 계산 없이** O(n)에 구하려면, 이전 값을 배열에 저장하는 방식은?",
+      "tags": [
+        "dp"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "바텀업 DP(테이블 채우기)"
+        },
+        {
+          "id": "c2",
+          "label": "BFS 큐만"
+        },
+        {
+          "id": "c3",
+          "label": "투 포인터 merge"
+        },
+        {
+          "id": "c4",
+          "label": "스택으로 괄호만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "피보나치 DP는 작은 부분 문제를 순서대로 채웁니다. BFS·merge·스택은 수열 DP와 다릅니다."
+    },
+    {
+      "id": "pick_dp_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "계단을 한 번에 1 또는 2칸 오를 때 **도달 방법의 수**를 구합니다. 마지막 칸 직전 상태 두 가지를 더하는 점화식은?",
+      "tags": [
+        "dp"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "dp[i] = dp[i-1] + dp[i-2]"
+        },
+        {
+          "id": "c2",
+          "label": "dp[i] = dp[i-1] * dp[i-2]"
+        },
+        {
+          "id": "c3",
+          "label": "BFS로 레벨만"
+        },
+        {
+          "id": "c4",
+          "label": "이분 탐색 lower bound"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "계단 오르기는 피보나치형 DP입니다. 곱·BFS·이분은 방법 수 점화와 맞지 않습니다."
+    },
+    {
+      "id": "pick_greedy_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "회의실 배정: 종료 시각이 빠른 회의부터 골라 겹치지 않게 최대 개수를 구할 때 쓰는 전략은?",
+      "tags": [
+        "greedy"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "종료 시각 기준 정렬 후 greedy 선택"
+        },
+        {
+          "id": "c2",
+          "label": "모든 부분집합 brute force만"
+        },
+        {
+          "id": "c3",
+          "label": "BFS 최단 경로"
+        },
+        {
+          "id": "c4",
+          "label": "prefix 해시만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "interval scheduling은 end time greedy가 표준입니다. brute·BFS·prefix만으로는 최적 greedy가 아닙니다."
+    },
+    {
+      "id": "pick_greedy_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "동전 거스름돈에서 **항상 큰 동전부터** 고르면 최적이 보장되지 않을 수 있습니다. 반면 특정 동전 체계(예: 1,5,10,25)에서는?",
+      "tags": [
+        "greedy"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "greedy가 최적인 특수 케이스(캐노니컬)"
+        },
+        {
+          "id": "c2",
+          "label": "항상 DP가 불필요"
+        },
+        {
+          "id": "c3",
+          "label": "BFS만으로 충분"
+        },
+        {
+          "id": "c4",
+          "label": "스택 LIFO만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "일반 동전 문제는 DP가 필요할 수 있고, 특정 액면가 체계에서만 greedy가 맞습니다."
+    },
+    {
+      "id": "pick_ll_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "단일 연결 리스트에서 **사이클 존재 여부**를 O(1) 추가 공간에 검사하려면?",
+      "tags": [
+        "linked_list"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "느린·빠른 포인터(Floyd)"
+        },
+        {
+          "id": "c2",
+          "label": "해시로 two-sum"
+        },
+        {
+          "id": "c3",
+          "label": "이분 탐색만"
+        },
+        {
+          "id": "c4",
+          "label": "스택으로 괄호"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "사이클 검사는 slow/fast pointer가 전형입니다. two-sum·이분·괄호 스택은 리스트 사이클과 무관합니다."
+    },
+    {
+      "id": "pick_ll_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "정렬된 두 연결 리스트를 **병합**할 때, 더미 노드 뒤에 작은 값을 연결하는 방식은?",
+      "tags": [
+        "linked_list"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "두 포인터로 merge"
+        },
+        {
+          "id": "c2",
+          "label": "BFS 레벨 순회"
+        },
+        {
+          "id": "c3",
+          "label": "단조 스택 NGE"
+        },
+        {
+          "id": "c4",
+          "label": "prefix sum 해시만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "sorted list merge는 array merge와 같은 two-pointer 패턴입니다."
+    },
+    {
+      "id": "pick_rec_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "트리의 **최대 깊이**를 구할 때, 자식 재귀 결과에 1을 더하는 구조는?",
+      "tags": [
+        "recursion"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "재귀 + base case(리프는 0 또는 1)"
+        },
+        {
+          "id": "c2",
+          "label": "투 포인터 3-sum"
+        },
+        {
+          "id": "c3",
+          "label": "해시 two-sum만"
+        },
+        {
+          "id": "c4",
+          "label": "BFS 없이 스택만 필수"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "트리 깊이는 전형적인 재귀 정의입니다. 3-sum·two-sum·스택만은 깊이 정의와 다릅니다."
+    },
+    {
+      "id": "pick_rec_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "순열/조합을 **백트래킹**으로 생성할 때, 선택을 취소(unchoose)하는 이유는?",
+      "tags": [
+        "recursion"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "다른 가지 탐색을 위해 상태를 되돌림"
+        },
+        {
+          "id": "c2",
+          "label": "최단 거리 보장"
+        },
+        {
+          "id": "c3",
+          "label": "O(log n) 정렬만"
+        },
+        {
+          "id": "c4",
+          "label": "해시 충돌 처리"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "백트래킹은 choose-explore-unchoose입니다. 최단거리·정렬·해시 충돌과는 무관합니다."
+    },
+    {
+      "id": "pick_tree_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "이진 탐색 트리에서 **중위 순회(inorder)** 결과는?",
+      "tags": [
+        "tree"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "키 오름차순(정렬된 순서)"
+        },
+        {
+          "id": "c2",
+          "label": "레벨 순서"
+        },
+        {
+          "id": "c3",
+          "label": "무작위 순서"
+        },
+        {
+          "id": "c4",
+          "label": "루트만 출력"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "BST inorder는 정렬 순서를 줍니다. level order는 BFS, 나머지는 inorder 정의가 아닙니다."
+    },
+    {
+      "id": "pick_tree_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "트리의 **레벨 순회**에 쓰는 자료구조는?",
+      "tags": [
+        "tree",
+        "bfs"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "큐(BFS)"
+        },
+        {
+          "id": "c2",
+          "label": "스택만(DFS preorder와 동일)"
+        },
+        {
+          "id": "c3",
+          "label": "해시 맵만"
+        },
+        {
+          "id": "c4",
+          "label": "이분 탐색"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "레벨 순회는 BFS 큐입니다. 스택 DFS는 깊이 우선이고 level order와 다릅니다."
+    },
+    {
+      "id": "pick_heap_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "실시간으로 **최댓값/최솟값**을 삽입·삭제하려면 평균 O(log n)인 구조는?",
+      "tags": [
+        "heap"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "힙(priority queue)"
+        },
+        {
+          "id": "c2",
+          "label": "단일 연결 리스트만"
+        },
+        {
+          "id": "c3",
+          "label": "투 포인터 merge"
+        },
+        {
+          "id": "c4",
+          "label": "스택 LIFO"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "우선순위 큐/힙이 동적 min/max에 적합합니다."
+    },
+    {
+      "id": "pick_heap_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "배열에서 **K번째 큰 원소**를 평균 O(n)에 찾는 방법은?",
+      "tags": [
+        "heap"
+      ],
+      "difficulty": 3,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "quickselect(분할)"
+        },
+        {
+          "id": "c2",
+          "label": "버블 정렬 전체"
+        },
+        {
+          "id": "c3",
+          "label": "BFS만"
+        },
+        {
+          "id": "c4",
+          "label": "괄호 스택만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "Kth element는 quickselect 또는 size-k heap이 표준입니다."
+    },
+    {
+      "id": "pick_sliding_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "고정 길이 k인 **슬라이딩 윈도우 최댓값**을 각 위치마다 구할 때 deque로 front를 관리하는 알고리즘은?",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 3,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "단조 deque(sliding window maximum)"
+        },
+        {
+          "id": "c2",
+          "label": "이분 탐색 sqrt"
+        },
+        {
+          "id": "c3",
+          "label": "BFS multi-source"
+        },
+        {
+          "id": "c4",
+          "label": "해시 anagram만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "Sliding window max는 monotonic deque가 O(n) 해법입니다."
+    },
+    {
+      "id": "pick_sliding_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "문자열에서 **길이 k 부분 문자열**이 모두 다른지 확인하려면?",
+      "tags": [
+        "hash",
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "윈도우 + set/해시로 중복 검사"
+        },
+        {
+          "id": "c2",
+          "label": "스택 DFS만"
+        },
+        {
+          "id": "c3",
+          "label": "이분 lower bound"
+        },
+        {
+          "id": "c4",
+          "label": "BFS 격자만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "고정 k 윈도우는 set/해시로 O(n)에 중복을 검사합니다."
+    },
+    {
+      "id": "pick_math_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "1부터 n까지 합을 O(1)에 구하는 공식은?",
+      "tags": [
+        "math"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "n * (n + 1) / 2"
+        },
+        {
+          "id": "c2",
+          "label": "n * (n - 1)"
+        },
+        {
+          "id": "c3",
+          "label": "2^n"
+        },
+        {
+          "id": "c4",
+          "label": "n log n"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "등차수열 합 공식 n(n+1)/2입니다."
+    },
+    {
+      "id": "pick_math_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "소수 판별을 **√n까지** 나눠 보는 방식의 시간 복잡도는?",
+      "tags": [
+        "math"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "O(√n)"
+        },
+        {
+          "id": "c2",
+          "label": "O(1)"
+        },
+        {
+          "id": "c3",
+          "label": "O(n log n)"
+        },
+        {
+          "id": "c4",
+          "label": "O(log log n)만 항상"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "trial division은 √n까지 검사합니다."
+    },
+    {
+      "id": "pick_graph_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "가중치 있는 그래프 **최단 경로(음수 간선 없음)** 에 Dijkstra가 쓰는 구조는?",
+      "tags": [
+        "graph"
+      ],
+      "difficulty": 3,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "우선순위 큐(힙) + 거리 갱신"
+        },
+        {
+          "id": "c2",
+          "label": "스택 LIFO만"
+        },
+        {
+          "id": "c3",
+          "label": "투 포인터만"
+        },
+        {
+          "id": "c4",
+          "label": "버블 정렬"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "Dijkstra는 min-heap으로 확장합니다."
+    },
+    {
+      "id": "pick_graph_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "무방향 그래프의 **연결 요소 개수**를 세려면?",
+      "tags": [
+        "graph",
+        "bfs"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "BFS/DFS로 미방문 정점 탐색"
+        },
+        {
+          "id": "c2",
+          "label": "이분 탐색만"
+        },
+        {
+          "id": "c3",
+          "label": "단조 스택만"
+        },
+        {
+          "id": "c4",
+          "label": "3-sum 투 포인터"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "연결 요소는 그래프 탐색으로 셉니다."
+    },
+    {
+      "id": "pick_bit_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "짝수 여부를 **비트 연산** 한 번으로 검사하려면?",
+      "tags": [
+        "bit"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "n & 1 == 0"
+        },
+        {
+          "id": "c2",
+          "label": "n >> 2 == 0"
+        },
+        {
+          "id": "c3",
+          "label": "n | 1 == 0"
+        },
+        {
+          "id": "c4",
+          "label": "n ^ n == 1"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "최하위 비트가 0이면 짝수입니다."
+    },
+    {
+      "id": "pick_bit_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "두 정수의 **XOR**은 같은 비트 위치가 다를 때 1이 됩니다. a ^ a의 결과는?",
+      "tags": [
+        "bit"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "0"
+        },
+        {
+          "id": "c2",
+          "label": "1"
+        },
+        {
+          "id": "c3",
+          "label": "a"
+        },
+        {
+          "id": "c4",
+          "label": "2a"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "같은 값 XOR은 0입니다."
+    },
+    {
+      "id": "pick_str_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "문자열이 **회문**인지 양끝 포인터로 검사하는 패턴은?",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "투 포인터로 안쪽으로 비교"
+        },
+        {
+          "id": "c2",
+          "label": "BFS 큐만"
+        },
+        {
+          "id": "c3",
+          "label": "이분 탐색 lower bound"
+        },
+        {
+          "id": "c4",
+          "label": "스택 NGE"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "회문 검사는 양끝 two pointer가 기본입니다."
+    },
+    {
+      "id": "pick_str_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "문자열 **압축 길이**(연속 동일 문자 개수)를 세려면?",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "한 번 순회하며 run length 세기"
+        },
+        {
+          "id": "c2",
+          "label": "BFS만"
+        },
+        {
+          "id": "c3",
+          "label": "이분만"
+        },
+        {
+          "id": "c4",
+          "label": "해시 3-sum"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "run-length는 단일 패스로 처리합니다."
+    },
+    {
+      "id": "pick_design_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "LRU 캐시를 O(1) get/put으로 구현할 때 흔히 쓰는 조합은?",
+      "tags": [
+        "design"
+      ],
+      "difficulty": 3,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "해시맵 + 이중 연결 리스트"
+        },
+        {
+          "id": "c2",
+          "label": "스택만"
+        },
+        {
+          "id": "c3",
+          "label": "버블 정렬"
+        },
+        {
+          "id": "c4",
+          "label": "BFS만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "LRU는 hash map + DLL이 표준입니다."
+    },
+    {
+      "id": "pick_design_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "스택의 push/pop을 **큐**처럼 사용하려면?",
+      "tags": [
+        "design",
+        "stack"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "스택 두 개(in/out)"
+        },
+        {
+          "id": "c2",
+          "label": "힙 하나만"
+        },
+        {
+          "id": "c3",
+          "label": "이분 탐색"
+        },
+        {
+          "id": "c4",
+          "label": "BFS deque 없이"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "Queue via two stacks가 클래식입니다."
+    },
+    {
+      "id": "pick_sim_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "시뮬레이션: 격자에서 **방향 배열**로 이동할 때 경계를 벗어나면?",
+      "tags": [
+        "simulation"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "조건문으로 범위 검사 후 스킵/중단"
+        },
+        {
+          "id": "c2",
+          "label": "무조건 wrap-around"
+        },
+        {
+          "id": "c3",
+          "label": "이분 탐색"
+        },
+        {
+          "id": "c4",
+          "label": "해시 two-sum"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "격자 시뮬레이션은 bounds check가 필수입니다."
+    },
+    {
+      "id": "pick_sim_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "로봇 청소기가 **장애물까지 직진** 후 회전하는 규칙을 코드로 옮기면?",
+      "tags": [
+        "simulation"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "방향 벡터 + while 이동 시뮬레이션"
+        },
+        {
+          "id": "c2",
+          "label": "DP 테이블만"
+        },
+        {
+          "id": "c3",
+          "label": "merge sort"
+        },
+        {
+          "id": "c4",
+          "label": "topological sort만"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "규칙 기반 이동은 시뮬레이션 루프로 구현합니다."
+    },
+    {
+      "id": "pick_review_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "복습 큐에 **최근 오답**을 넣고 간격을 늘리는 학습 전략과 가장 가까운 것은?",
+      "tags": [
+        "review"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "간격 반복(spaced repetition)"
+        },
+        {
+          "id": "c2",
+          "label": "이분 탐색만"
+        },
+        {
+          "id": "c3",
+          "label": "BFS만"
+        },
+        {
+          "id": "c4",
+          "label": "greedy coin 항상"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "오답 복습은 spaced repetition 개념과 맞습니다."
+    },
+    {
+      "id": "pick_review_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "같은 패턴 태그 문제를 연속으로 풀 때 기대 효과는?",
+      "tags": [
+        "review"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "패턴 인식 강화"
+        },
+        {
+          "id": "c2",
+          "label": "메모리 사용 0"
+        },
+        {
+          "id": "c3",
+          "label": "O(1) 정렬 보장"
+        },
+        {
+          "id": "c4",
+          "label": "그래프 사이클 제거"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "태그별 연습은 패턴 매칭 능력을 키웁니다."
+    },
+    {
+      "id": "pick_mix_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "정렬된 배열에서 **중복 제거(in-place)** 후 길이를 반환할 때 투 포인터 역할은?",
+      "tags": [
+        "array",
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "쓰기 포인터 + 읽기 포인터"
+        },
+        {
+          "id": "c2",
+          "label": "BFS parent만"
+        },
+        {
+          "id": "c3",
+          "label": "스택 NGE"
+        },
+        {
+          "id": "c4",
+          "label": "Dijkstra heap"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "in-place unique는 slow/fast write 패턴입니다."
+    },
+    {
+      "id": "pick_mix_002",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "stem": "**부분집합 합**이 target인지 보려면 정렬 후 투 포인터 또는?",
+      "tags": [
+        "two_pointer",
+        "hash"
+      ],
+      "difficulty": 2,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "해시 set으로 complement 탐색"
+        },
+        {
+          "id": "c2",
+          "label": "BFS만"
+        },
+        {
+          "id": "c3",
+          "label": "괄호 스택"
+        },
+        {
+          "id": "c4",
+          "label": "topo sort"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "subset sum 변형은 해시/투 포인터 조합이 흔합니다."
     }
   ]
 }

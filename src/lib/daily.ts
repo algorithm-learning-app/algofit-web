@@ -1,5 +1,6 @@
 import pickBundle from '../content/pick.json';
 import blankBundle from '../content/blank.json';
+import { DEFAULT_CODE_LANGUAGE, normalizeCodeLanguage } from './codeLanguage';
 
 export type PickQuestion = {
   id: string;
@@ -45,6 +46,11 @@ export type DailyPack = {
   questions: DailyQuestion[];
 };
 
+export type DailyComposeResult = {
+  pack: DailyPack;
+  usedLanguageFallback: boolean;
+};
+
 export const DAILY_TOTAL = 5;
 export const DAILY_PICK_COUNT = 3;
 export const DAILY_BLANK_COUNT = 2;
@@ -57,6 +63,7 @@ type QuestionPools = { picks: PickQuestion[]; blanks: BlankQuestion[] };
 
 let cachedPack: DailyPack | null = null;
 let cachedPackDateKey: string | null = null;
+let cachedPackLanguage: string | null = null;
 
 /** Asia/Seoul calendar date `YYYY-MM-DD`. */
 export function seoulDateKey(reference = new Date()): string {
@@ -87,6 +94,14 @@ export function loadQuestionPools(): QuestionPools {
   return { picks, blanks };
 }
 
+export function filterBlanksByLanguage(
+  blanks: BlankQuestion[],
+  preferredLanguage: string,
+): BlankQuestion[] {
+  const lang = normalizeCodeLanguage(preferredLanguage);
+  return blanks.filter((q) => q.language === lang);
+}
+
 function mulberry32(seed: number): () => number {
   return () => {
     let t = (seed += 0x6d2b79f5);
@@ -97,6 +112,7 @@ function mulberry32(seed: number): () => number {
 }
 
 function sampleFrom<T>(pool: T[], count: number, rng: () => number): T[] {
+  if (pool.length === 0) return [];
   if (pool.length <= count) return [...pool];
   const indices = pool.map((_, i) => i);
   for (let i = indices.length - 1; i > 0; i -= 1) {
@@ -106,36 +122,108 @@ function sampleFrom<T>(pool: T[], count: number, rng: () => number): T[] {
   return indices.slice(0, count).map((i) => pool[i]);
 }
 
-export function composeDailyPack(pools: QuestionPools, dateKey: string): DailyPack {
+export function composeDailyPack(
+  pools: QuestionPools,
+  dateKey: string,
+  preferredLanguage = DEFAULT_CODE_LANGUAGE,
+): DailyComposeResult {
   const rng = mulberry32(seoulDateSeed(dateKey));
+  const lang = normalizeCodeLanguage(preferredLanguage);
   const picks = sampleFrom(pools.picks, DAILY_PICK_COUNT, rng);
-  const blanks = sampleFrom(pools.blanks, DAILY_BLANK_COUNT, rng);
+
+  let blankPool = filterBlanksByLanguage(pools.blanks, lang);
+  let usedLanguageFallback = false;
+  if (blankPool.length < DAILY_BLANK_COUNT && lang !== DEFAULT_CODE_LANGUAGE) {
+    blankPool = filterBlanksByLanguage(pools.blanks, DEFAULT_CODE_LANGUAGE);
+    usedLanguageFallback = true;
+  }
+
+  const blanks = sampleFrom(blankPool, DAILY_BLANK_COUNT, rng);
+  const questions = [...picks, ...blanks].map((q) =>
+    withShuffledChoices(q, mulberry32(choiceShuffleSeed(dateKey, q.id))),
+  );
   return {
-    id: `daily_${dateKey.replaceAll('-', '_')}`,
-    title: '오늘의 챌린지',
-    questions: [...picks, ...blanks],
+    pack: {
+      id: `daily_${dateKey.replaceAll('-', '_')}`,
+      title: '오늘의 챌린지',
+      questions,
+    },
+    usedLanguageFallback,
   };
 }
 
-export function getDailyPack(reference = new Date()): DailyPack {
-  const dateKey = seoulDateKey(reference);
-  if (cachedPack && cachedPackDateKey === dateKey) {
-    return cachedPack;
+/** 날짜·문항별로 안정적인 선택지 순서 시드. */
+export function choiceShuffleSeed(scope: string, questionId: string): number {
+  let hash = 0;
+  const key = `${scope}:${questionId}`;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) | 0;
   }
-  const pack = composeDailyPack(loadQuestionPools(), dateKey);
-  cachedPack = pack;
+  return hash >>> 0;
+}
+
+function shuffleArray<T>(items: T[], rng: () => number): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+/** 선택지 순서만 섞고 정답 id/문자열은 유지한다. */
+export function withShuffledChoices(q: DailyQuestion, rng: () => number): DailyQuestion {
+  if (q.type === 'pick') {
+    return {
+      ...q,
+      choices: shuffleArray(q.choices, rng),
+    };
+  }
+  return {
+    ...q,
+    blanks: q.blanks.map((slot) => ({
+      ...slot,
+      choices: shuffleArray(slot.choices, rng),
+    })),
+  };
+}
+
+export function getDailyPack(
+  reference = new Date(),
+  preferredLanguage = DEFAULT_CODE_LANGUAGE,
+): DailyPack {
+  return getDailyPackWithMeta(reference, preferredLanguage).pack;
+}
+
+export function getDailyPackWithMeta(
+  reference = new Date(),
+  preferredLanguage = DEFAULT_CODE_LANGUAGE,
+): DailyComposeResult {
+  const lang = normalizeCodeLanguage(preferredLanguage);
+  const dateKey = seoulDateKey(reference);
+  if (cachedPack && cachedPackDateKey === dateKey && cachedPackLanguage === lang) {
+    return { pack: cachedPack, usedLanguageFallback: false };
+  }
+  const result = composeDailyPack(loadQuestionPools(), dateKey, lang);
+  cachedPack = result.pack;
   cachedPackDateKey = dateKey;
-  return pack;
+  cachedPackLanguage = lang;
+  return result;
 }
 
 /** 테스트에서 캐시 초기화 */
 export function resetDailyPackCacheForTest(): void {
   cachedPack = null;
   cachedPackDateKey = null;
+  cachedPackLanguage = null;
 }
 
-export function getDailyQuestion(index: number, reference = new Date()): DailyQuestion | undefined {
-  return getDailyPack(reference).questions[index];
+export function getDailyQuestion(
+  index: number,
+  reference = new Date(),
+  preferredLanguage = DEFAULT_CODE_LANGUAGE,
+): DailyQuestion | undefined {
+  return getDailyPack(reference, preferredLanguage).questions[index];
 }
 
 export function isPickQuestion(q: DailyQuestion): q is PickQuestion {

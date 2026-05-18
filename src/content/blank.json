@@ -896,6 +896,570 @@
         }
       ],
       "explanation": "진입 차수가 0이 되면 큐에 넣습니다."
+    },
+    {
+      "id": "blank_java_bs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "정렬된 배열에서 target의 인덱스를 찾는 **Java 이분 탐색**입니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "int search(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while ({{b1}}) {\n        int mid = left + (right - left) / 2;\n        if (nums[mid] == target) return mid;\n        else if (nums[mid] < target) {{b2}}\n        else right = mid - 1;\n    }\n    return -1;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left <= right"
+          ],
+          "choices": [
+            "left <= right",
+            "left < right",
+            "mid <= right",
+            "left != right"
+          ]
+        },
+        {
+          "id": "b2",
+          "correctAnswers": [
+            "left = mid + 1"
+          ],
+          "choices": [
+            "left = mid + 1",
+            "left = mid",
+            "right = mid + 1",
+            "left--"
+          ]
+        }
+      ],
+      "explanation": "while은 left <= right이고, target이 더 크면 left를 mid+1로 올립니다."
+    },
+    {
+      "id": "blank_java_tp_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java에서 정렬 배열 **두 수의 합**을 투 포인터로 찾습니다. 빈칸을 채우세요.",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "int[] twoSumSorted(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left < right) {\n        int sum = nums[left] + nums[right];\n        if (sum == target) return new int[]{left, right};\n        else if (sum < target) {{b1}}\n        else right--;\n    }\n    return new int[]{-1, -1};\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left++"
+          ],
+          "choices": [
+            "left++",
+            "left--",
+            "right++",
+            "left = right"
+          ]
+        }
+      ],
+      "explanation": "합이 작으면 left를 증가시켜 더 큰 합을 만듭니다."
+    },
+    {
+      "id": "blank_java_hash_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java **HashMap**으로 문자 빈도를 셉니다. 빈칸을 채우세요.",
+      "tags": [
+        "hash"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "Map<Character, Integer> freq(char[] s) {\n    Map<Character, Integer> map = new HashMap<>();\n    for (char ch : s) {\n        {{b1}}\n    }\n    return map;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "map.put(ch, map.getOrDefault(ch, 0) + 1)"
+          ],
+          "choices": [
+            "map.put(ch, map.getOrDefault(ch, 0) + 1)",
+            "map.put(ch, 1)",
+            "map.remove(ch)",
+            "map.clear()"
+          ]
+        }
+      ],
+      "explanation": "getOrDefault로 기존 빈도에 1을 더합니다."
+    },
+    {
+      "id": "blank_java_stack_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java **Stack**으로 괄호 유효성을 검사합니다. 빈칸을 채우세요.",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "boolean isValid(String s) {\n    Deque<Character> st = new ArrayDeque<>();\n    for (char ch : s.toCharArray()) {\n        if (ch == '(' || ch == '[' || ch == '{') st.push(ch);\n        else if (st.isEmpty()) return false;\n        else {{b1}}\n    }\n    return st.isEmpty();\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "st.pop()"
+          ],
+          "choices": [
+            "st.pop()",
+            "st.push(ch)",
+            "st.peek()",
+            "return true"
+          ]
+        }
+      ],
+      "explanation": "닫는 괄호면 짝이 맞는지 확인 후 pop합니다."
+    },
+    {
+      "id": "blank_java_arr_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java에서 배열 **최댓값**을 순회하며 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "int max(int[] nums) {\n    int best = Integer.MIN_VALUE;\n    for (int x : {{b1}}) {\n        if (x > best) best = x;\n    }\n    return best;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "nums"
+          ],
+          "choices": [
+            "nums",
+            "nums.length",
+            "best",
+            "x"
+          ]
+        }
+      ],
+      "explanation": "향상된 for는 nums를 직접 순회합니다."
+    },
+    {
+      "id": "blank_java_bfs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java **Queue**로 BFS를 시작합니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "void bfs(int start, List<List<Integer>> adj) {\n    Queue<Integer> q = new ArrayDeque<>();\n    boolean[] seen = new boolean[adj.size()];\n    q.offer(start);\n    seen[start] = true;\n    while (!q.isEmpty()) {\n        int u = {{b1}};\n        for (int v : adj.get(u)) {\n            if (!seen[v]) {\n                seen[v] = true;\n                q.offer(v);\n            }\n        }\n    }\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "q.poll()"
+          ],
+          "choices": [
+            "q.poll()",
+            "q.peek()",
+            "q.offer(u)",
+            "q.clear()"
+          ]
+        }
+      ],
+      "explanation": "BFS는 큐 front를 poll로 꺼냅니다."
+    },
+    {
+      "id": "blank_java_sort_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java **Arrays.sort**로 정렬합니다. 빈칸을 채우세요.",
+      "tags": [
+        "sorting"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "void sortAsc(int[] nums) {\n    {{b1}}\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "Arrays.sort(nums)"
+          ],
+          "choices": [
+            "Arrays.sort(nums)",
+            "nums.sort()",
+            "Collections.sort(nums)",
+            "Arrays.reverse(nums)"
+          ]
+        }
+      ],
+      "explanation": "원시 배열 int[]는 Arrays.sort를 씁니다."
+    },
+    {
+      "id": "blank_java_ll_001",
+      "type": "blank",
+      "version": 1,
+      "language": "java",
+      "stem": "Java에서 연결 리스트를 **역순**으로 바꿉니다. 빈칸을 채우세요.",
+      "tags": [
+        "linked_list"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "ListNode reverse(ListNode head) {\n    ListNode prev = null, cur = head;\n    while (cur != null) {\n        ListNode next = cur.next;\n        cur.next = prev;\n        prev = cur;\n        {{b1}}\n    }\n    return prev;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "cur = next"
+          ],
+          "choices": [
+            "cur = next",
+            "cur = prev",
+            "prev = next",
+            "return cur"
+          ]
+        }
+      ],
+      "explanation": "다음 노드를 저장한 뒤 cur를 next로 전진합니다."
+    },
+    {
+      "id": "blank_js_bs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **이분 탐색**입니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "function search(nums, target) {\n  let left = 0, right = nums.length - 1;\n  while ({{b1}}) {\n    const mid = Math.floor((left + right) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[mid] < target) {{b2}}\n    else right = mid - 1;\n  }\n  return -1;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left <= right"
+          ],
+          "choices": [
+            "left <= right",
+            "left < right",
+            "mid <= right",
+            "left !== right"
+          ]
+        },
+        {
+          "id": "b2",
+          "correctAnswers": [
+            "left = mid + 1"
+          ],
+          "choices": [
+            "left = mid + 1",
+            "left = mid",
+            "right = mid + 1",
+            "left--"
+          ]
+        }
+      ],
+      "explanation": "while 조건과 target이 클 때 left 이동이 핵심입니다."
+    },
+    {
+      "id": "blank_js_tp_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **투 포인터**로 두 수의 합을 찾습니다. 빈칸을 채우세요.",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "function twoSumSorted(nums, target) {\n  let left = 0, right = nums.length - 1;\n  while (left < right) {\n    const sum = nums[left] + nums[right];\n    if (sum === target) return [left, right];\n    if (sum < target) {{b1}}\n    else right--;\n  }\n  return [-1, -1];\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left++"
+          ],
+          "choices": [
+            "left++",
+            "left--",
+            "right++",
+            "left = right"
+          ]
+        }
+      ],
+      "explanation": "합이 작으면 left를 올립니다."
+    },
+    {
+      "id": "blank_js_hash_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **Map**으로 빈도를 셉니다. 빈칸을 채우세요.",
+      "tags": [
+        "hash"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "function freq(s) {\n  const map = new Map();\n  for (const ch of s) {\n    {{b1}}\n  }\n  return map;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "map.set(ch, (map.get(ch) ?? 0) + 1)"
+          ],
+          "choices": [
+            "map.set(ch, (map.get(ch) ?? 0) + 1)",
+            "map.delete(ch)",
+            "map.clear()",
+            "map.set(ch, ch)"
+          ]
+        }
+      ],
+      "explanation": "get 후 null 병합으로 +1합니다."
+    },
+    {
+      "id": "blank_js_arr_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript에서 배열 **filter**로 짝수만 고릅니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "function pickEvens(nums) {\n  return nums.filter(x => {{b1}});\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "x % 2 === 0"
+          ],
+          "choices": [
+            "x % 2 === 0",
+            "x % 2",
+            "x > 0",
+            "x === 1"
+          ]
+        }
+      ],
+      "explanation": "짝수는 x % 2 === 0입니다."
+    },
+    {
+      "id": "blank_js_stack_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **스택(배열)**으로 괄호를 검사합니다. 빈칸을 채우세요.",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "function isValid(s) {\n  const st = [];\n  for (const ch of s) {\n    if ('([{'.includes(ch)) st.push(ch);\n    else if ({{b1}}) return false;\n    else st.pop();\n  }\n  return st.length === 0;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "st.length === 0"
+          ],
+          "choices": [
+            "st.length === 0",
+            "st.length > 0",
+            "ch === st[0]",
+            "st.push(ch)"
+          ]
+        }
+      ],
+      "explanation": "닫는 괄호인데 스택이 비면 false입니다."
+    },
+    {
+      "id": "blank_js_bfs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **큐**로 BFS를 돕니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "function bfs(start, adj) {\n  const q = [start];\n  const seen = new Set([start]);\n  while (q.length) {\n    const u = {{b1}};\n    for (const v of adj[u]) {\n      if (!seen.has(v)) {\n        seen.add(v);\n        q.push(v);\n      }\n    }\n  }\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "q.shift()"
+          ],
+          "choices": [
+            "q.shift()",
+            "q.pop()",
+            "q.push(u)",
+            "q.clear()"
+          ]
+        }
+      ],
+      "explanation": "FIFO는 shift로 front를 꺼냅니다."
+    },
+    {
+      "id": "blank_js_async_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript에서 **Promise** 결과를 기다립니다. 빈칸을 채우세요.",
+      "tags": [
+        "async"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "async function load() {\n  const data = {{b1}} fetch(url);\n  return data.json();\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "await"
+          ],
+          "choices": [
+            "await",
+            "async",
+            "return",
+            "new"
+          ]
+        }
+      ],
+      "explanation": "비동기 결과는 await로 기다립니다."
+    },
+    {
+      "id": "blank_js_reduce_001",
+      "type": "blank",
+      "version": 1,
+      "language": "javascript",
+      "stem": "JavaScript **reduce**로 합을 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "function sum(nums) {\n  return nums.reduce((acc, x) => {{b1}}, 0);\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "acc + x"
+          ],
+          "choices": [
+            "acc + x",
+            "acc * x",
+            "x - acc",
+            "acc"
+          ]
+        }
+      ],
+      "explanation": "누적값 acc에 x를 더합니다."
+    },
+    {
+      "id": "blank_c_bs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "c",
+      "stem": "C 언어 **이분 탐색** while 조건입니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "int search(int* nums, int n, int target) {\n    int left = 0, right = n - 1;\n    while ({{b1}}) {\n        int mid = left + (right - left) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left <= right"
+          ],
+          "choices": [
+            "left <= right",
+            "left < right",
+            "mid <= right",
+            "left != right"
+          ]
+        }
+      ],
+      "explanation": "구간은 left <= right로 유지합니다."
+    },
+    {
+      "id": "blank_c_arr_001",
+      "type": "blank",
+      "version": 1,
+      "language": "c",
+      "stem": "C에서 배열을 **순회**하며 최댓값을 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "int array_max(int* nums, int n) {\n    int best = nums[0];\n    for (int i = 1; i < {{b1}}; i++) {\n        if (nums[i] > best) best = nums[i];\n    }\n    return best;\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "n"
+          ],
+          "choices": [
+            "n",
+            "n - 1",
+            "0",
+            "best"
+          ]
+        }
+      ],
+      "explanation": "인덱스는 1부터 n-1까지(또는 i < n)입니다."
+    },
+    {
+      "id": "blank_go_bs_001",
+      "type": "blank",
+      "version": 1,
+      "language": "go",
+      "stem": "Go **이분 탐색**입니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "func search(nums []int, target int) int {\n    left, right := 0, len(nums)-1\n    for {{b1}} {\n        mid := left + (right-left)/2\n        if nums[mid] == target {\n            return mid\n        }\n        if nums[mid] < target {\n            left = mid + 1\n        } else {\n            right = mid - 1\n        }\n    }\n    return -1\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left <= right"
+          ],
+          "choices": [
+            "left <= right",
+            "left < right",
+            "mid <= right",
+            "left != right"
+          ]
+        }
+      ],
+      "explanation": "Go에서도 left <= right가 기본 루프 조건입니다."
+    },
+    {
+      "id": "blank_go_slice_001",
+      "type": "blank",
+      "version": 1,
+      "language": "go",
+      "stem": "Go **슬라이스**에 원소를 append합니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "func appendEvens(nums []int) []int {\n    out := []int{}\n    for _, x := range nums {\n        if x%2 == 0 {\n            out = {{b1}}\n        }\n    }\n    return out\n}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "append(out, x)"
+          ],
+          "choices": [
+            "append(out, x)",
+            "append(nums, x)",
+            "out = x",
+            "len(out)"
+          ]
+        }
+      ],
+      "explanation": "Go에서는 append(out, x)로 확장합니다."
     }
   ]
 }
