@@ -41,7 +41,6 @@
       "language": "python",
       "stem": "이미 **오름차순 정렬된** 배열에서 값 x의 **첫 등장 인덱스**(없으면 삽입 위치)를 O(log n)에 찾으려 합니다. 가장 적합한 방법은?",
       "tags": [
-        "array",
         "binary_search"
       ],
       "difficulty": 2,

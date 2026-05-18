@@ -211,20 +211,18 @@ export function recordDailyAnswer(
   isCorrect: boolean,
 ): { progress: GuestProgress; session: DailySession } {
   const xpGain = 10;
-  let nextSession: DailySession = {
+  const nextSession: DailySession = {
     ...session,
     answers: [...session.answers, isCorrect],
     xpEarned: session.xpEarned + xpGain,
     awaitingFeedback: true,
     lastAnswerCorrect: isCorrect,
-    hearts: isCorrect ? session.hearts : Math.max(0, session.hearts - 1),
   };
 
   let nextProgress = addXp(progress, xpGain);
   nextProgress = {
     ...nextProgress,
     dailyProgress: nextSession.answers.length,
-    hearts: nextSession.hearts,
   };
 
   saveDailySession(nextSession);
