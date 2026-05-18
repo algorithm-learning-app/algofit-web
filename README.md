@@ -23,6 +23,12 @@ npm run dev
 
 게스트 진행: `localStorage` (`algofit:guestProgress`, `algofit:guestId`).
 
+## MVP 상태 (2026-05-19)
+
+**Must 완료** — Daily·`/continue`·`/profile`·PC 보너스·pick/blank 50·30 ([docs/05-mvp-scope.md](../../docs/05-mvp-scope.md))
+
+검증: `./scripts/pr-review-check.sh` (`npm run build`)
+
 ## PR 리뷰 (로컬 봇)
 
 변경은 보통 `main`에 직접 푸시합니다. PR을 열었을 때:
