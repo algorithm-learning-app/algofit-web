@@ -139,13 +139,52 @@ export function composeDailyPack(
   }
 
   const blanks = sampleFrom(blankPool, DAILY_BLANK_COUNT, rng);
+  const questions = [...picks, ...blanks].map((q) =>
+    withShuffledChoices(q, mulberry32(choiceShuffleSeed(dateKey, q.id))),
+  );
   return {
     pack: {
       id: `daily_${dateKey.replaceAll('-', '_')}`,
       title: '오늘의 챌린지',
-      questions: [...picks, ...blanks],
+      questions,
     },
     usedLanguageFallback,
+  };
+}
+
+/** 날짜·문항별로 안정적인 선택지 순서 시드. */
+export function choiceShuffleSeed(scope: string, questionId: string): number {
+  let hash = 0;
+  const key = `${scope}:${questionId}`;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) | 0;
+  }
+  return hash >>> 0;
+}
+
+function shuffleArray<T>(items: T[], rng: () => number): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+/** 선택지 순서만 섞고 정답 id/문자열은 유지한다. */
+export function withShuffledChoices(q: DailyQuestion, rng: () => number): DailyQuestion {
+  if (q.type === 'pick') {
+    return {
+      ...q,
+      choices: shuffleArray(q.choices, rng),
+    };
+  }
+  return {
+    ...q,
+    blanks: q.blanks.map((slot) => ({
+      ...slot,
+      choices: shuffleArray(slot.choices, rng),
+    })),
   };
 }
 
