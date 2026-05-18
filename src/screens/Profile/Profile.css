@@ -110,6 +110,29 @@
   height: 6px;
 }
 
+.profile-lang-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-lang-chip {
+  padding: 6px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.profile-lang-chip--on {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--color-primary);
+}
+
 .profile-toast {
   position: fixed;
   bottom: calc(80px + env(safe-area-inset-bottom));

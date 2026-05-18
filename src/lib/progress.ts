@@ -1,13 +1,20 @@
+import {
+  effectiveCodeLanguage,
+  loadPreferredCodeLanguage,
+  normalizeCodeLanguage,
+} from './codeLanguage';
 import { DAILY_TOTAL } from './daily';
 import { PC_BONUS_XP } from './pcBonus';
 
 const STORAGE_KEY = 'algofit:guestProgress';
+export { effectiveCodeLanguage, loadPreferredCodeLanguage };
 const GUEST_ID_KEY = 'algofit:guestId';
 const DAILY_SESSION_KEY = 'algofit:dailySession';
 
 export type GuestProgress = {
-  schemaVersion: 2;
+  schemaVersion: 5;
   guestId: string;
+  preferredCodeLanguage?: string | null;
   level: number;
   xp: number;
   xpToNextLevel: number;
@@ -37,7 +44,8 @@ export type DailySession = {
 };
 
 const DEFAULT_PROGRESS: Omit<GuestProgress, 'guestId'> = {
-  schemaVersion: 2,
+  schemaVersion: 5,
+  preferredCodeLanguage: loadPreferredCodeLanguage(),
   level: 1,
   xp: 0,
   xpToNextLevel: 100,
@@ -87,9 +95,16 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
         ? parsed.streak
         : DEFAULT_PROGRESS.streakCount;
 
+  const storedLang =
+    typeof parsed.preferredCodeLanguage === 'string'
+      ? parsed.preferredCodeLanguage
+      : loadPreferredCodeLanguage();
+
   return {
     ...DEFAULT_PROGRESS,
     guestId,
+    schemaVersion: 5,
+    preferredCodeLanguage: storedLang,
     level: typeof parsed.level === 'number' ? parsed.level : DEFAULT_PROGRESS.level,
     xp: typeof parsed.xp === 'number' ? parsed.xp : DEFAULT_PROGRESS.xp,
     xpToNextLevel:
@@ -157,6 +172,29 @@ export function loadProgress(): GuestProgress {
 
 export function saveProgress(progress: GuestProgress): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  if (progress.preferredCodeLanguage) {
+    localStorage.setItem(
+      'algofit:preferredCodeLanguage',
+      progress.preferredCodeLanguage,
+    );
+  }
+}
+
+export function setPreferredCodeLanguage(languageId: string): GuestProgress {
+  const progress = loadProgress();
+  const normalized = normalizeCodeLanguage(languageId);
+  const next: GuestProgress = {
+    ...progress,
+    preferredCodeLanguage: normalized,
+  };
+  saveProgress(next);
+  return next;
+}
+
+export function progressEffectiveCodeLanguage(progress: GuestProgress): string {
+  return normalizeCodeLanguage(
+    progress.preferredCodeLanguage ?? loadPreferredCodeLanguage(),
+  );
 }
 
 export function loadDailySession(): DailySession | null {

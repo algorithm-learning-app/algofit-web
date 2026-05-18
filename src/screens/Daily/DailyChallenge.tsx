@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { DAILY_TOTAL, getDailyQuestion, type DailyQuestion as DailyQuestionData } from '../../lib/daily';
+import {
+  DAILY_TOTAL,
+  getDailyPackWithMeta,
+  getDailyQuestion,
+  type DailyQuestion as DailyQuestionData,
+} from '../../lib/daily';
+import { effectiveCodeLanguage } from '../../lib/codeLanguage';
 import {
   advanceAfterFeedback,
   completeDailyChallenge,
@@ -35,6 +41,9 @@ export default function DailyChallenge() {
   const [completeSnapshot, setCompleteSnapshot] = useState<CompleteSnapshot | null>(
     null,
   );
+  const [languageFallbackMessage, setLanguageFallbackMessage] = useState<string | null>(
+    null,
+  );
 
   const isCompleteRoute =
     stepParam === 'complete' || location.pathname.endsWith('/complete');
@@ -43,6 +52,14 @@ export default function DailyChallenge() {
   useEffect(() => {
     const p = loadProgress();
     setProgress(p);
+
+    const lang = effectiveCodeLanguage();
+    const { usedLanguageFallback } = getDailyPackWithMeta(new Date(), lang);
+    if (usedLanguageFallback) {
+      setLanguageFallbackMessage(
+        '선택한 언어 문제가 부족해 Python 빈칸으로 진행합니다.',
+      );
+    }
 
     if (p.todayDailyCompleted && !isCompleteRoute) {
       setCompleteSnapshot({
@@ -137,7 +154,7 @@ export default function DailyChallenge() {
     );
   }
 
-  const question = getDailyQuestion(stepNumber - 1);
+  const question = getDailyQuestion(stepNumber - 1, new Date(), effectiveCodeLanguage());
   const isCorrect = session.lastAnswerCorrect === true;
   const feedbackText =
     question && session.lastAnswerCorrect !== null
@@ -177,6 +194,12 @@ export default function DailyChallenge() {
           />
         ))}
       </div>
+
+      {languageFallbackMessage ? (
+        <p className="daily__lang-hint" role="status">
+          {languageFallbackMessage}
+        </p>
+      ) : null}
 
       <section className="daily__card">
         {isFeedbackRoute && session.awaitingFeedback ? (

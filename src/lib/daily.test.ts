@@ -15,7 +15,7 @@ describe('daily composition', () => {
   it('구성은 pick 3 + blank 2 = 5문항', () => {
     resetDailyPackCacheForTest();
     const pools = loadQuestionPools();
-    const pack = composeDailyPack(pools, '2026-05-19');
+    const { pack } = composeDailyPack(pools, '2026-05-19');
 
     expect(pack.questions).toHaveLength(DAILY_TOTAL);
     const pickCount = pack.questions.filter(isPickQuestion).length;
@@ -27,8 +27,8 @@ describe('daily composition', () => {
   it('같은 서울 날짜에 동일한 문항 ID 순서', () => {
     const pools = loadQuestionPools();
     const dateKey = seoulDateKey(new Date('2026-05-18T20:00:00Z'));
-    const a = composeDailyPack(pools, dateKey);
-    const b = composeDailyPack(pools, dateKey);
+    const a = composeDailyPack(pools, dateKey).pack;
+    const b = composeDailyPack(pools, dateKey).pack;
     expect(a.questions.map((q) => q.id)).toEqual(b.questions.map((q) => q.id));
   });
 });
