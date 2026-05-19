@@ -2,6 +2,7 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './screens/Home/Home';
 import DailyChallenge from './screens/Daily/DailyChallenge';
 import Continue from './screens/Continue/Continue';
+import Profile from './screens/Profile/Profile';
 import PcBonusChallenge from './screens/PcBonus/PcBonusChallenge';
 import './App.css';
 
@@ -26,7 +27,7 @@ export default function App() {
         <Route path="/daily/:step/feedback" element={<DailyChallenge />} />
         <Route path="/daily/:step" element={<DailyChallenge />} />
         <Route path="/learn" element={<Placeholder title="학습 (준비 중)" />} />
-        <Route path="/profile" element={<Placeholder title="프로필 (준비 중)" />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/pc-bonus" element={<PcBonusChallenge />} />
         <Route path="/pc-bonus/feedback" element={<PcBonusChallenge />} />
         <Route path="/pc-bonus/complete" element={<PcBonusChallenge />} />
