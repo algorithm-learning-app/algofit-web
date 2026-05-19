@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "type": "blank",
-  "updatedAt": "2026-05-17",
+  "updatedAt": "2026-05-19",
   "questions": [
     {
       "id": "blank_arr_001",
@@ -9,14 +9,23 @@
       "version": 1,
       "language": "python",
       "stem": "배열 nums의 원소 합을 구하는 코드입니다. 빈칸을 채우세요.",
-      "tags": ["array"],
+      "tags": [
+        "array"
+      ],
       "difficulty": 1,
       "codeTemplate": "def array_sum(nums):\n    total = 0\n    for x in {{b1}}:\n        total += x\n    return total",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["nums"],
-          "choices": ["nums", "range(len(nums))", "nums.values()", "stack"]
+          "correctAnswers": [
+            "nums"
+          ],
+          "choices": [
+            "nums",
+            "range(len(nums))",
+            "nums.values()",
+            "stack"
+          ]
         }
       ],
       "explanation": "원소를 직접 순회하려면 `for x in nums`가 맞습니다. 인덱스가 필요하면 `range(len(nums))`를 쓰지만, 이 코드는 값만 더합니다."
@@ -27,14 +36,23 @@
       "version": 1,
       "language": "python",
       "stem": "오름차순 배열에서 두 수의 합이 target인 인덱스 쌍을 찾는 투 포인터 코드입니다. 빈칸을 채우세요.",
-      "tags": ["two_pointer"],
+      "tags": [
+        "two_pointer"
+      ],
       "difficulty": 2,
       "codeTemplate": "def two_sum_sorted(nums, target):\n    left, right = 0, len(nums) - 1\n    while left < right:\n        s = nums[left] + nums[right]\n        if s == target:\n            return left, right\n        elif s < target:\n            {{b1}}\n        else:\n            right -= 1\n    return -1, -1",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["left += 1"],
-          "choices": ["left += 1", "left -= 1", "right += 1", "left = right"]
+          "correctAnswers": [
+            "left += 1"
+          ],
+          "choices": [
+            "left += 1",
+            "left -= 1",
+            "right += 1",
+            "left = right"
+          ]
         }
       ],
       "explanation": "합이 target보다 작으면 더 큰 값이 필요하므로 왼쪽 포인터를 오른쪽으로 옮깁니다. 합이 크면 right를 줄입니다."
@@ -45,14 +63,23 @@
       "version": 1,
       "language": "python",
       "stem": "배열에서 complement = target - nums[i]가 이미 봤는지 해시로 확인하는 두 수의 합 코드입니다. 빈칸을 채우세요.",
-      "tags": ["hash"],
+      "tags": [
+        "hash"
+      ],
       "difficulty": 2,
       "codeTemplate": "def two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        need = target - x\n        if need in {{b1}}:\n            return seen[need], i\n        seen[x] = i\n    return -1, -1",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["seen"],
-          "choices": ["seen", "nums", "i", "target"]
+          "correctAnswers": [
+            "seen"
+          ],
+          "choices": [
+            "seen",
+            "nums",
+            "i",
+            "target"
+          ]
         }
       ],
       "explanation": "이미 지나온 값과 인덱스는 `seen` 딕셔너리에 있습니다. complement가 키로 존재하면 쌍을 찾은 것입니다."
@@ -63,14 +90,23 @@
       "version": 1,
       "language": "python",
       "stem": "정렬된 배열에서 target의 인덱스를 반환하는 이분 탐색입니다. 빈칸을 채우세요.",
-      "tags": ["binary_search"],
+      "tags": [
+        "binary_search"
+      ],
       "difficulty": 2,
       "codeTemplate": "def binary_search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            {{b1}}\n        else:\n            hi = mid - 1\n    return -1",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["lo = mid + 1"],
-          "choices": ["lo = mid + 1", "lo = mid", "hi = mid + 1", "lo = mid - 1"]
+          "correctAnswers": [
+            "lo = mid + 1"
+          ],
+          "choices": [
+            "lo = mid + 1",
+            "lo = mid",
+            "hi = mid + 1",
+            "lo = mid - 1"
+          ]
         }
       ],
       "explanation": "중간 값이 target보다 작으면 왼쪽 구간을 버리고 `lo`를 `mid + 1`로 올립니다. `lo = mid`는 무한 루프 위험이 있습니다."
@@ -81,14 +117,23 @@
       "version": 1,
       "language": "python",
       "stem": "스택을 이용해 괄호 문자열이 유효한지 검사합니다. 빈칸을 채우세요.",
-      "tags": ["stack"],
+      "tags": [
+        "stack"
+      ],
       "difficulty": 2,
       "codeTemplate": "def is_valid(s):\n    stack = []\n    pairs = {')': '(', ']': '[', '}': '{'}\n    for ch in s:\n        if ch in '([{':\n            stack.append(ch)\n        elif ch in ')]}':\n            if not stack or stack[-1] != {{b1}}:\n                return False\n            stack.pop()\n    return len(stack) == 0",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["pairs[ch]"],
-          "choices": ["pairs[ch]", "ch", "stack[0]", "pairs[stack[-1]]"]
+          "correctAnswers": [
+            "pairs[ch]"
+          ],
+          "choices": [
+            "pairs[ch]",
+            "ch",
+            "stack[0]",
+            "pairs[stack[-1]]"
+          ]
         }
       ],
       "explanation": "닫는 괄호 ch에 대응하는 여는 괄호는 `pairs[ch]`입니다. 스택 top과 일치해야 짝이 맞습니다."
@@ -99,19 +144,35 @@
       "version": 1,
       "language": "python",
       "stem": "정렬된 배열 nums에서 두 수의 합이 target이 되는 두 인덱스를 반환합니다. 빈칸을 채우세요.",
-      "tags": ["two_pointer"],
+      "tags": [
+        "two_pointer"
+      ],
       "difficulty": 2,
       "codeTemplate": "def two_sum_sorted(nums, target):\n    left, right = 0, len(nums) - 1\n    while {{b1}}:\n        s = nums[left] + nums[right]\n        if s == target:\n            return [left, right]\n        elif s < target:\n            {{b2}}\n        else:\n            right -= 1\n    return []",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["left < right"],
-          "choices": ["left < right", "left <= right", "left != right", "left > right"]
+          "correctAnswers": [
+            "left < right"
+          ],
+          "choices": [
+            "left < right",
+            "left <= right",
+            "left != right",
+            "left > right"
+          ]
         },
         {
           "id": "b2",
-          "correctAnswers": ["left += 1"],
-          "choices": ["left += 1", "left -= 1", "right += 1", "left = right"]
+          "correctAnswers": [
+            "left += 1"
+          ],
+          "choices": [
+            "left += 1",
+            "left -= 1",
+            "right += 1",
+            "left = right"
+          ]
         }
       ],
       "explanation": "합이 작으면 left를 올리고, while은 left < right로 같은 인덱스를 쓰지 않습니다."
@@ -122,19 +183,35 @@
       "version": 1,
       "language": "python",
       "stem": "정렬되지 않은 배열에서 두 수의 합이 target인 인덱스를 찾습니다. 빈칸을 채우세요.",
-      "tags": ["hash"],
+      "tags": [
+        "hash"
+      ],
       "difficulty": 2,
       "codeTemplate": "def two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        need = {{b1}}\n        if need in seen:\n            return [seen[need], i]\n        {{b2}}\n    return []",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["target - x"],
-          "choices": ["target - x", "target + x", "x - target", "x + target"]
+          "correctAnswers": [
+            "target - x"
+          ],
+          "choices": [
+            "target - x",
+            "target + x",
+            "x - target",
+            "x + target"
+          ]
         },
         {
           "id": "b2",
-          "correctAnswers": ["seen[x] = i"],
-          "choices": ["seen[x] = i", "seen[i] = x", "seen.append(x)", "seen.add(i)"]
+          "correctAnswers": [
+            "seen[x] = i"
+          ],
+          "choices": [
+            "seen[x] = i",
+            "seen[i] = x",
+            "seen.append(x)",
+            "seen.add(i)"
+          ]
         }
       ],
       "explanation": "보수는 target - x이고, 현재 값과 인덱스를 seen에 저장합니다."
@@ -145,19 +222,35 @@
       "version": 1,
       "language": "python",
       "stem": "정렬된 nums에서 target의 인덱스를 반환합니다. 없으면 -1.",
-      "tags": ["binary_search"],
+      "tags": [
+        "binary_search"
+      ],
       "difficulty": 2,
       "codeTemplate": "def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while {{b1}}:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            {{b2}}\n        else:\n            right = mid - 1\n    return -1",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["left <= right"],
-          "choices": ["left <= right", "left < right", "left != right", "mid <= right"]
+          "correctAnswers": [
+            "left <= right"
+          ],
+          "choices": [
+            "left <= right",
+            "left < right",
+            "left != right",
+            "mid <= right"
+          ]
         },
         {
           "id": "b2",
-          "correctAnswers": ["left = mid + 1"],
-          "choices": ["left = mid + 1", "left = mid", "right = mid + 1", "left = mid - 1"]
+          "correctAnswers": [
+            "left = mid + 1"
+          ],
+          "choices": [
+            "left = mid + 1",
+            "left = mid",
+            "right = mid + 1",
+            "left = mid - 1"
+          ]
         }
       ],
       "explanation": "구간 유지는 left <= right, target이 더 크면 left = mid + 1입니다."
@@ -168,19 +261,35 @@
       "version": 1,
       "language": "python",
       "stem": "괄호 문자열 s가 올바른지 검사합니다. 빈칸을 채우세요.",
-      "tags": ["stack"],
+      "tags": [
+        "stack"
+      ],
       "difficulty": 2,
       "codeTemplate": "def is_valid(s):\n    stack = []\n    pairs = {')': '(', ']': '[', '}': '{'}\n    for ch in s:\n        if ch in '([{':\n            {{b1}}\n        elif ch in ')]}':\n            if not stack or {{b2}}:\n                return False\n            stack.pop()\n    return not stack",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["stack.append(ch)"],
-          "choices": ["stack.append(ch)", "stack.pop()", "stack[0] = ch", "return False"]
+          "correctAnswers": [
+            "stack.append(ch)"
+          ],
+          "choices": [
+            "stack.append(ch)",
+            "stack.pop()",
+            "stack[0] = ch",
+            "return False"
+          ]
         },
         {
           "id": "b2",
-          "correctAnswers": ["stack[-1] != pairs[ch]"],
-          "choices": ["stack[-1] != pairs[ch]", "stack[0] != pairs[ch]", "ch not in pairs", "len(stack) == 0"]
+          "correctAnswers": [
+            "stack[-1] != pairs[ch]"
+          ],
+          "choices": [
+            "stack[-1] != pairs[ch]",
+            "stack[0] != pairs[ch]",
+            "ch not in pairs",
+            "len(stack) == 0"
+          ]
         }
       ],
       "explanation": "여는 괄호는 push, 닫을 때 top이 pairs[ch]와 맞는지 확인합니다."
@@ -191,40 +300,602 @@
       "version": 1,
       "language": "python",
       "stem": "격자에서 (sr,sc)에서 (tr,tc)까지 최소 이동 칸 수를 구합니다. 빈칸을 채우세요.",
-      "tags": ["bfs"],
+      "tags": [
+        "bfs"
+      ],
       "difficulty": 3,
       "codeTemplate": "from collections import deque\n\ndef shortest_path(grid, sr, sc, tr, tc):\n    rows, cols = len(grid), len(grid[0])\n    q = deque([(sr, sc, 0)])\n    visited = {(sr, sc)}\n    while q:\n        r, c, dist = q.popleft()\n        if (r, c) == (tr, tc):\n            return dist\n        for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 0 and (nr, nc) not in visited:\n                {{b1}}\n                {{b2}}\n    return -1",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["visited.add((nr, nc))"],
-          "choices": ["visited.add((nr, nc))", "visited.add((r, c))", "grid[nr][nc] = 1", "q.clear()"]
+          "correctAnswers": [
+            "visited.add((nr, nc))"
+          ],
+          "choices": [
+            "visited.add((nr, nc))",
+            "visited.add((r, c))",
+            "grid[nr][nc] = 1",
+            "q.clear()"
+          ]
         },
         {
           "id": "b2",
-          "correctAnswers": ["q.append((nr, nc, dist + 1))"],
-          "choices": ["q.append((nr, nc, dist + 1))", "q.appendleft((nr, nc, dist))", "q.pop()", "return dist + 1"]
+          "correctAnswers": [
+            "q.append((nr, nc, dist + 1))"
+          ],
+          "choices": [
+            "q.append((nr, nc, dist + 1))",
+            "q.appendleft((nr, nc, dist))",
+            "q.pop()",
+            "return dist + 1"
+          ]
         }
       ],
       "explanation": "BFS는 방문 표시 후 큐에 거리+1로 넣습니다."
     },
     {
-      "id": "blank_greedy_001",
+      "id": "blank_arr_002",
       "type": "blank",
       "version": 1,
       "language": "python",
-      "stem": "활동 종료 시각이 주어질 때, 겹치지 않게 최대 몇 개를 고를 수 있는지 그리디로 구합니다. 빈칸을 채우세요.",
-      "tags": ["greedy"],
-      "difficulty": 2,
-      "codeTemplate": "def max_non_overlapping(intervals):\n    intervals.sort(key=lambda x: x[1])\n    count = 0\n    end = float('-inf')\n    for start, finish in intervals:\n        if start >= end:\n            count += 1\n            {{b1}}\n    return count",
+      "stem": "배열 nums의 **최댓값**을 한 번 순회하며 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def array_max(nums):\n    best = float('-inf')\n    for x in {{b1}}:\n        if x > best:\n            best = x\n    return best",
       "blanks": [
         {
           "id": "b1",
-          "correctAnswers": ["end = finish"],
-          "choices": ["end = finish", "end = start", "count -= 1", "intervals.pop()"]
+          "correctAnswers": [
+            "nums"
+          ],
+          "choices": [
+            "nums",
+            "range(len(nums))",
+            "nums.keys()",
+            "stack"
+          ]
         }
       ],
-      "explanation": "종료 시각이 빠른 순으로 정렬한 뒤, 선택하면 end를 그 활동의 끝으로 갱신합니다."
+      "explanation": "원소를 직접 순회하려면 `for x in nums`가 맞습니다."
+    },
+    {
+      "id": "blank_arr_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "배열에서 **짝수만** 골라 새 리스트를 만듭니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def pick_evens(nums):\n    out = []\n    for x in nums:\n        if {{b1}}:\n            out.append(x)\n    return out",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "x % 2 == 0"
+          ],
+          "choices": [
+            "x % 2 == 0",
+            "x % 2",
+            "x > 0",
+            "x == 0"
+          ]
+        }
+      ],
+      "explanation": "짝수 조건은 `x % 2 == 0`입니다."
+    },
+    {
+      "id": "blank_arr_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "prefix 합 배열을 만듭니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def prefix_sum(nums):\n    pref = [0]\n    for x in nums:\n        {{b1}}\n    return pref",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "pref.append(pref[-1] + x)"
+          ],
+          "choices": [
+            "pref.append(pref[-1] + x)",
+            "pref.append(x)",
+            "pref.pop()",
+            "pref[-1] = x"
+          ]
+        }
+      ],
+      "explanation": "누적합은 이전 누적값에 현재 원소를 더해 append합니다."
+    },
+    {
+      "id": "blank_arr_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "배열을 **역순**으로 만듭니다. 빈칸을 채우세요.",
+      "tags": [
+        "array"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def reverse_copy(nums):\n  return {{b1}}",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "nums[::-1]"
+          ],
+          "choices": [
+            "nums[::-1]",
+            "nums.reverse()",
+            "reversed(nums)",
+            "list(nums)"
+          ]
+        }
+      ],
+      "explanation": "슬라이스 `[::-1]`는 새 역순 리스트를 반환합니다. `reverse()`는 in-place입니다."
+    },
+    {
+      "id": "blank_tp_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "정렬 배열에서 **중복 없이** 두 수의 합이 target인 쌍을 찾습니다. 빈칸을 채우세요.",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 3,
+      "codeTemplate": "def two_sum_unique(nums, target):\n    left, right = 0, len(nums) - 1\n    while left < right:\n        s = nums[left] + nums[right]\n        if s == target:\n            return left, right\n        elif s < target:\n            {{b1}}\n        else:\n            right -= 1\n    return -1, -1",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left += 1"
+          ],
+          "choices": [
+            "left += 1",
+            "left -= 1",
+            "right += 1",
+            "left = right"
+          ]
+        }
+      ],
+      "explanation": "합이 작으면 left를 올려 더 큰 합을 만듭니다."
+    },
+    {
+      "id": "blank_tp_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "슬라이딩 윈도우로 **합이 target 이하**인 최대 길이를 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def max_len_subarray_sum_at_most(nums, target):\n    left = best = window = 0\n    for right, x in enumerate(nums):\n        window += x\n        while window > target and left <= right:\n            window -= nums[left]\n            {{b1}}\n        best = max(best, right - left + 1)\n    return best",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "left += 1"
+          ],
+          "choices": [
+            "left += 1",
+            "right += 1",
+            "left -= 1",
+            "left = right"
+          ]
+        }
+      ],
+      "explanation": "윈도우 합이 초과하면 left를 줄이며 이동합니다."
+    },
+    {
+      "id": "blank_tp_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "두 정렬 배열을 병합합니다. 빈칸을 채우세요.",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def merge_sorted(a, b):\n    i = j = 0\n    out = []\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            {{b1}}\n            i += 1\n        else:\n            out.append(b[j])\n            j += 1\n    out.extend(a[i:])\n    out.extend(b[j:])\n    return out",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "out.append(a[i])"
+          ],
+          "choices": [
+            "out.append(a[i])",
+            "out.append(b[j])",
+            "i += 1",
+            "j += 1"
+          ]
+        }
+      ],
+      "explanation": "작은 쪽을 먼저 append하고 해당 포인터만 전진합니다."
+    },
+    {
+      "id": "blank_hash_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "문자 빈도를 세는 코드입니다. 빈칸을 채우세요.",
+      "tags": [
+        "hash"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def char_freq(s):\n    freq = {}\n    for ch in s:\n        {{b1}}\n    return freq",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "freq[ch] = freq.get(ch, 0) + 1"
+          ],
+          "choices": [
+            "freq[ch] = freq.get(ch, 0) + 1",
+            "freq.append(ch)",
+            "freq[ch] += ch",
+            "freq = ch"
+          ]
+        }
+      ],
+      "explanation": "빈도 갱신은 get으로 기본값 0 후 +1이 안전합니다."
+    },
+    {
+      "id": "blank_hash_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "prefix sum과 해시로 **연속 부분합이 k**인 구간 수를 셉니다. 빈칸을 채우세요.",
+      "tags": [
+        "hash"
+      ],
+      "difficulty": 3,
+      "codeTemplate": "def subarray_sum_k(nums, k):\n    count = pref = 0\n    seen = {0: 1}\n    for x in nums:\n        pref += x\n        count += {{b1}}\n        seen[pref] = seen.get(pref, 0) + 1\n    return count",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "seen.get(pref - k, 0)"
+          ],
+          "choices": [
+            "seen.get(pref - k, 0)",
+            "seen.get(pref + k, 0)",
+            "seen[pref]",
+            "seen.get(k, 0)"
+          ]
+        }
+      ],
+      "explanation": "누적합 pref에서 k를 뺀 값의 빈도를 더합니다."
+    },
+    {
+      "id": "blank_hash_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "집합에 값이 있는지 O(1)에 확인합니다. 빈칸을 채우세요.",
+      "tags": [
+        "hash"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def contains_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if {{b1}}:\n            return True\n        seen.add(x)\n    return False",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "x in seen"
+          ],
+          "choices": [
+            "x in seen",
+            "seen in x",
+            "x not in seen",
+            "seen[x]"
+          ]
+        }
+      ],
+      "explanation": "이미 본 값이면 중복입니다."
+    },
+    {
+      "id": "blank_bs_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "lower bound: target 이상인 첫 인덱스를 이분 탐색합니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def lower_bound(nums, target):\n    lo, hi = 0, len(nums)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if nums[mid] < target:\n            {{b1}}\n        else:\n            hi = mid\n    return lo",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "lo = mid + 1"
+          ],
+          "choices": [
+            "lo = mid + 1",
+            "lo = mid",
+            "hi = mid + 1",
+            "hi = mid - 1"
+          ]
+        }
+      ],
+      "explanation": "mid 값이 작으면 lo를 mid+1로 올립니다."
+    },
+    {
+      "id": "blank_bs_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "이분 탐색으로 **제곱근 floor**를 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def my_sqrt(x):\n    lo, hi = 0, x\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if mid * mid <= x:\n            lo = mid + 1\n        else:\n            {{b1}}\n    return hi",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "hi = mid - 1"
+          ],
+          "choices": [
+            "hi = mid - 1",
+            "hi = mid + 1",
+            "lo = mid",
+            "lo = mid - 1"
+          ]
+        }
+      ],
+      "explanation": "mid^2가 x보다 크면 답 후보를 줄여 hi를 mid-1로 둡니다."
+    },
+    {
+      "id": "blank_bs_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "회전 정렬 배열에서 최솟값 인덱스를 찾습니다. 빈칸을 채우세요.",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 3,
+      "codeTemplate": "def find_min_rotated(nums):\n    lo, hi = 0, len(nums) - 1\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if nums[mid] > nums[hi]:\n            {{b1}}\n        else:\n            hi = mid\n    return lo",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "lo = mid + 1"
+          ],
+          "choices": [
+            "lo = mid + 1",
+            "lo = mid",
+            "hi = mid + 1",
+            "hi = mid - 1"
+          ]
+        }
+      ],
+      "explanation": "mid가 오른쪽보다 크면 최솟값은 오른쪽 half에 있습니다."
+    },
+    {
+      "id": "blank_stack_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "스택으로 **후위 표기식**을 계산합니다. 빈칸을 채우세요.",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "def eval_rpn(tokens):\n    st = []\n    for t in tokens:\n        if t in '+-*/':\n            b, a = st.pop(), st.pop()\n            st.append(int(eval(f'{a}{t}{b}')))\n        else:\n            {{b1}}\n    return st[-1]",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "st.append(int(t))"
+          ],
+          "choices": [
+            "st.append(int(t))",
+            "st.pop()",
+            "st.clear()",
+            "return int(t)"
+          ]
+        }
+      ],
+      "explanation": "숫자 토큰은 스택에 push합니다."
+    },
+    {
+      "id": "blank_stack_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "단조 스택으로 **다음 더 큰 온도** 일수를 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 3,
+      "codeTemplate": "def daily_temperatures(temps):\n    ans = [0] * len(temps)\n    st = []\n    for i, t in enumerate(temps):\n        while st and temps[st[-1]] < t:\n            j = st.pop()\n            ans[j] = {{b1}}\n        st.append(i)\n    return ans",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "i - j"
+          ],
+          "choices": [
+            "i - j",
+            "j - i",
+            "i + j",
+            "1"
+          ]
+        }
+      ],
+      "explanation": "더 따뜻한 날과의 차이는 현재 인덱스 i에서 j를 뺀 값입니다."
+    },
+    {
+      "id": "blank_stack_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "유효 괄호 검사에서 스택이 비었는지 확인합니다. 빈칸을 채우세요.",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 1,
+      "codeTemplate": "def is_valid(s):\n    stack = []\n    pairs = {')': '(', ']': '[', '}': '{'}\n    for ch in s:\n        if ch in '([{':\n            stack.append(ch)\n        elif ch in ')]}':\n            if {{b1}}:\n                return False\n            stack.pop()\n    return len(stack) == 0",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "not stack"
+          ],
+          "choices": [
+            "not stack",
+            "stack",
+            "len(stack) > 1",
+            "ch in stack"
+          ]
+        }
+      ],
+      "explanation": "닫는 괄호인데 스택이 비면 유효하지 않습니다."
+    },
+    {
+      "id": "blank_bfs_002",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "BFS로 격자 **섬의 개수**를 셉니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "from collections import deque\n\ndef num_islands(grid):\n    if not grid:\n        return 0\n    rows, cols = len(grid), len(grid[0])\n    count = 0\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == '1':\n                count += 1\n                q = deque([(r, c)])\n                grid[r][c] = '0'\n                while q:\n                    cr, cc = q.popleft()\n                    for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '1':\n                            grid[nr][nc] = '0'\n                            {{b1}}\n    return count",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "q.append((nr, nc))"
+          ],
+          "choices": [
+            "q.append((nr, nc))",
+            "q.appendleft((nr, nc))",
+            "q.pop()",
+            "return count"
+          ]
+        }
+      ],
+      "explanation": "새 땅을 발견하면 큐에 넣어 BFS를 이어갑니다."
+    },
+    {
+      "id": "blank_bfs_003",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "무방향 그래프 최단 거리 BFS입니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "from collections import deque\n\ndef shortest_path_edges(adj, start, goal):\n    q = deque([(start, 0)])\n    seen = {start}\n    while q:\n        node, dist = q.popleft()\n        if node == goal:\n            return dist\n        for nei in adj[node]:\n            if nei not in seen:\n                {{b1}}\n                {{b2}}\n    return -1",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "seen.add(nei)"
+          ],
+          "choices": [
+            "seen.add(nei)",
+            "seen.add(node)",
+            "q.clear()",
+            "return dist"
+          ]
+        },
+        {
+          "id": "b2",
+          "correctAnswers": [
+            "q.append((nei, dist + 1))"
+          ],
+          "choices": [
+            "q.append((nei, dist + 1))",
+            "q.appendleft((nei, dist))",
+            "q.pop()",
+            "seen.remove(nei)"
+          ]
+        }
+      ],
+      "explanation": "방문 표시 후 거리+1로 큐에 넣습니다."
+    },
+    {
+      "id": "blank_bfs_004",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "multi-source BFS로 **모든 0 칸까지 최소 거리**를 구합니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 3,
+      "codeTemplate": "from collections import deque\n\ndef multi_source_dist(grid, sources):\n    rows, cols = len(grid), len(grid[0])\n    dist = [[-1] * cols for _ in range(rows)]\n    q = deque()\n    for r, c in sources:\n        dist[r][c] = 0\n        {{b1}}\n    while q:\n        r, c = q.popleft()\n        for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and dist[nr][nc] == -1:\n                dist[nr][nc] = dist[r][c] + 1\n                {{b2}}\n    return dist",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "q.append((r, c))"
+          ],
+          "choices": [
+            "q.append((r, c))",
+            "q.pop()",
+            "dist[r][c] = -1",
+            "return dist"
+          ]
+        },
+        {
+          "id": "b2",
+          "correctAnswers": [
+            "q.append((nr, nc))"
+          ],
+          "choices": [
+            "q.append((nr, nc))",
+            "q.appendleft((r, c))",
+            "q.clear()",
+            "dist[nr][nc] = 0"
+          ]
+        }
+      ],
+      "explanation": "모든 소스를 큐에 넣고 시작한 뒤, 이웃을 거리+1로 확장합니다."
+    },
+    {
+      "id": "blank_bfs_005",
+      "type": "blank",
+      "version": 1,
+      "language": "python",
+      "stem": "Kahn 위상 정렬에서 진입 차수 0인 정점을 큐에 넣습니다. 빈칸을 채우세요.",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 2,
+      "codeTemplate": "from collections import deque\n\ndef topo_sort(n, edges):\n    indeg = [0] * n\n    adj = [[] for _ in range(n)]\n    for u, v in edges:\n        adj[u].append(v)\n        indeg[v] += 1\n    q = deque([i for i in range(n) if indeg[i] == 0])\n    order = []\n    while q:\n        u = q.popleft()\n        order.append(u)\n        for v in adj[u]:\n            indeg[v] -= 1\n            if {{b1}}:\n                q.append(v)\n    return order",
+      "blanks": [
+        {
+          "id": "b1",
+          "correctAnswers": [
+            "indeg[v] == 0"
+          ],
+          "choices": [
+            "indeg[v] == 0",
+            "indeg[u] == 0",
+            "indeg[v] > 0",
+            "v == u"
+          ]
+        }
+      ],
+      "explanation": "진입 차수가 0이 되면 큐에 넣습니다."
     }
   ]
 }
