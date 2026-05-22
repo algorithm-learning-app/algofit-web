@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "type": "pick",
-  "updatedAt": "2026-05-19",
+  "updatedAt": "2026-05-22",
   "questions": [
     {
       "id": "pick_arr_002",
       "type": "pick",
       "version": 1,
       "language": "python",
-      "stem": "길이 n인 정수 배열에서 연속된 구간의 합이 target 이하인 **가장 긴 구간 길이**를 구합니다. 배열 원소는 음수일 수 있습니다. 추가 메모리를 O(1)에 가깝게 쓰려면 어떤 접근이 먼저 떠오르나요?",
+      "stem": "**음수가 없는** 정수 배열에서 연속된 구간의 합이 target 이하인 **가장 긴 구간 길이**를 구합니다. 추가 메모리를 O(1)에 가깝게 쓰려면 어떤 접근이 먼저 떠오르나요?",
       "tags": [
         "array"
       ],
@@ -20,19 +20,19 @@
         },
         {
           "id": "c2",
-          "label": "정렬된 배열에서 이분 탐색만"
+          "label": "누적합 배열을 만든 뒤 각 r에 대해 최소 l을 이분 탐색"
         },
         {
           "id": "c3",
-          "label": "스택으로 괄호 짝 맞추기"
+          "label": "모든 부분 배열을 이중 루프로 합산 비교"
         },
         {
           "id": "c4",
-          "label": "BFS로 격자 최단 경로"
+          "label": "정렬 후 양끝 투 포인터로 합을 좁히기"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "연속 구간 합·길이 문제는 보통 배열 위에서 두 포인터로 윈도우를 조절합니다. 이분 탐색은 정렬·단조 경계에, BFS는 그래프 거리에 쓰입니다."
+      "explanation": "음수가 없으면 합이 단조 증가하므로 슬라이딩 윈도우가 O(n)+O(1) 공간으로 동작합니다. 누적합 + 이분 탐색도 정답을 주지만 O(n log n)이고 누적합 배열 O(n) 공간이 추가됩니다. 정렬은 ‘연속 구간’ 정보를 깨므로 적용 불가."
     },
     {
       "id": "pick_arr_003",
@@ -109,23 +109,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "딕셔너리(해시 맵)로 문자 → 빈도"
+          "label": "해시 맵으로 문자→빈도 저장"
         },
         {
           "id": "c2",
-          "label": "스택으로 역순 출력만"
+          "label": "정렬한 뒤 인접 같은 문자 묶음 길이를 한 번 더 순회"
         },
         {
           "id": "c3",
-          "label": "이분 탐색으로 정렬된 구간만"
+          "label": "비트마스크로 등장 여부만 표시 (빈도는 잃음)"
         },
         {
           "id": "c4",
-          "label": "BFS로 최단 거리"
+          "label": "각 문자마다 전체 문자열을 다시 카운트"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "빈도·존재 여부를 키 단위로 O(1)에 다루려면 해시 맵이 맞습니다. 스택·BFS는 순서·그래프 탐색용입니다."
+      "explanation": "키→값 빈도가 필요하면 해시 맵이 O(n) 시간 + O(σ) 공간으로 가장 자연스럽습니다. 정렬+묶기도 정답을 주지만 O(n log n)이고 원본 순서가 바뀝니다. 비트마스크는 ‘몇 번 나왔는지’를 잃어 요구 조건을 만족하지 못합니다."
     },
     {
       "id": "pick_bs_002",
@@ -140,23 +140,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "구간이 어느 쪽이 정렬됐는지 보며 이분 탐색"
+          "label": "중간값과 끝값을 비교해 정렬된 half를 가리며 이분 탐색"
         },
         {
           "id": "c2",
-          "label": "양끝 투 포인터로 두 수의 합"
+          "label": "0번 인덱스부터 선형 스캔으로 첫 하강 지점 찾기"
         },
         {
           "id": "c3",
-          "label": "해시로 complement만 저장"
+          "label": "다시 정렬한 뒤 nums[0]을 반환"
         },
         {
           "id": "c4",
-          "label": "큐 BFS로 레벨 탐색"
+          "label": "양 끝 두 값만 비교해 작은 쪽 선택"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "회전 정렬 배열은 중간과 끝을 비교해 어느 half가 정렬됐는지 가르는 이분 탐색이 전형적입니다. 투 포인터·해시는 이 최솟값 문제의 첫 선택이 아닙니다."
+      "explanation": "회전 정렬 배열은 어느 half가 정렬되어 있는지를 이분으로 가르며 O(log n)에 최솟값을 찾습니다. 선형 스캔도 정답이지만 O(n)이라 log n의 이점을 버립니다. 양 끝만 비교하면 회전 위치를 알 수 없어 일반적으로 틀립니다."
     },
     {
       "id": "pick_stack_001",
@@ -171,23 +171,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "스택으로 열린 괄호 push, 닫힐 때 짝 검사"
+          "label": "스택에 열린 괄호 push, 닫힐 때 top과 짝 검사"
         },
         {
           "id": "c2",
-          "label": "BFS로 격자 최단 경로"
+          "label": "큐(FIFO)에 열린 괄호를 넣고 닫힐 때 front와 짝 검사"
         },
         {
           "id": "c3",
-          "label": "이분 탐색으로 lower bound"
+          "label": "(의 개수에서 )의 개수를 빼는 카운터 하나로 처리"
         },
         {
           "id": "c4",
-          "label": "해시로 두 수의 합"
+          "label": "정렬한 뒤 (와 )의 개수만 비교"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "LIFO인 스택이 괄호 짝 맞추기의 표준입니다. BFS·이분·해시는 이 제약(최근 열림 먼저 닫기)과 맞지 않습니다."
+      "explanation": "최근에 열린 괄호를 먼저 닫아야 하므로 LIFO인 스택이 자연스럽습니다. 단일 카운터는 () 한 종류일 때만 통하고 [, { 가 섞이면 짝을 구분할 수 없습니다. 큐·정렬은 순서·종류 정보를 잃어 짝 검사를 못합니다."
     },
     {
       "id": "pick_arr_001",
@@ -202,23 +202,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "배열을 한 번 순회하며 현재까지의 최댓값 갱신"
+          "label": "한 번 순회하며 현재까지의 최댓값 갱신"
         },
         {
           "id": "c2",
-          "label": "배열을 정렬한 뒤 맨 앞 원소 선택"
+          "label": "배열을 오름차순 정렬한 뒤 마지막 원소 반환"
         },
         {
           "id": "c3",
-          "label": "해시 테이블에 빈도를 저장"
+          "label": "분할 정복: 좌우 절반의 max를 재귀로 결합"
         },
         {
           "id": "c4",
-          "label": "BFS로 탐색"
+          "label": "첫 원소를 기준값으로 두고 나머지는 검사 생략"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "최댓값은 전 원소를 한 번 훑으며 max를 갱신하면 O(n)입니다."
+      "explanation": "단일 패스로 max를 갱신하면 O(n) 시간 + O(1) 공간으로 가장 가볍습니다. 정렬 후 마지막 원소도 정답을 주지만 O(n log n) 시간을 써 과합니다. ‘메모리 거의 없이’라는 단서가 정렬·재귀 같은 보조 비용이 큰 안을 제외합니다."
     },
     {
       "id": "pick_arr_004",
@@ -264,23 +264,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "투 포인터 (양끝에서 좁히기)"
+          "label": "양끝 투 포인터로 좁히기"
         },
         {
           "id": "c2",
-          "label": "이분 탐색만 단독"
+          "label": "해시 맵에 값→인덱스를 저장하며 complement 조회"
         },
         {
           "id": "c3",
-          "label": "스택으로 중위 표현식"
+          "label": "모든 쌍을 이중 루프로 비교"
         },
         {
           "id": "c4",
-          "label": "BFS 레벨 순회"
+          "label": "각 원소마다 complement를 이분 탐색"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "정렬된 배열의 두 수 합은 양끝 투 포인터가 전형적입니다."
+      "explanation": "정렬된 배열의 두 수 합은 양끝 투 포인터로 O(n) 시간 + O(1) 공간이 가장 깔끔합니다. 해시 맵도 정답을 주지만 정렬 정보를 버리고 O(n) 공간을 추가로 씁니다. 이분 탐색은 O(n log n)이라 투 포인터보다 느립니다."
     },
     {
       "id": "pick_tp_003",
@@ -295,23 +295,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "슬라이딩 윈도우(두 포인터)"
+          "label": "슬라이딩 윈도우(두 포인터)로 윈도우 합을 유지"
         },
         {
           "id": "c2",
-          "label": "스택만으로 LIFO"
+          "label": "누적합 + 이분 탐색으로 각 r에 대한 최소 l 찾기"
         },
         {
           "id": "c3",
-          "label": "해시로 complement만"
+          "label": "모든 부분 배열을 이중 루프로 합산"
         },
         {
           "id": "c4",
-          "label": "이분 탐색으로 회전 배열"
+          "label": "분할 정복으로 좌우 최대 길이 결합"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "연속 구간 길이·합 문제는 윈도우를 조절하는 슬라이딩 윈도우가 맞습니다."
+      "explanation": "음수가 없으면 윈도우 합이 단조성을 가져 슬라이딩 윈도우가 O(n)에 답을 줍니다. 누적합 + 이분 탐색도 정답이지만 O(n log n) + O(n) 공간이라 더 무겁습니다. 이중 루프는 O(n²)로 큰 입력에서 한계."
     },
     {
       "id": "pick_hash_001",
@@ -326,23 +326,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "해시 테이블 (값 → 인덱스)"
+          "label": "해시 테이블에 값→인덱스를 저장하며 complement 조회"
         },
         {
           "id": "c2",
-          "label": "스택"
+          "label": "모든 쌍을 이중 루프로 직접 비교"
         },
         {
           "id": "c3",
-          "label": "큐만 사용한 BFS"
+          "label": "정렬한 뒤 양끝 투 포인터로 합을 좁히기"
         },
         {
           "id": "c4",
-          "label": "세그먼트 트리"
+          "label": "각 원소에 대해 complement를 선형 탐색"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "순회하며 complement가 해시에 있는지 보면 평균 O(n)입니다."
+      "explanation": "정렬되지 않은 배열의 2-sum은 해시 맵 한 번 순회로 평균 O(n)입니다. 정렬+투 포인터도 정답이지만 O(n log n)이고 원래 인덱스를 잃습니다. 이중 루프·선형 탐색은 O(n²)로 큰 입력에서 한계."
     },
     {
       "id": "pick_hash_003",
@@ -388,23 +388,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "이분 탐색"
+          "label": "이분 탐색으로 O(log n)에 검사"
         },
         {
           "id": "c2",
-          "label": "해시로 빈도만 세기"
+          "label": "처음부터 선형 탐색으로 일치 검사"
         },
         {
           "id": "c3",
-          "label": "스택으로 괄호 검사"
+          "label": "해시 set을 만든 뒤 in으로 확인"
         },
         {
           "id": "c4",
-          "label": "완전 탐색만 가능"
+          "label": "다시 한 번 정렬한 뒤 첫 원소와 비교"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "정렬된 배열에서 값 하나를 찾는 기본 도구는 이분 탐색 O(log n)입니다."
+      "explanation": "이미 정렬된 배열에서 존재 검사는 이분 탐색이 O(log n)으로 정렬 이점을 살립니다. 해시 set도 정답을 주지만 O(n) 공간이 추가되고 정렬 정보를 낭비합니다. 선형 탐색은 O(n)이라 log n의 우위를 놓칩니다."
     },
     {
       "id": "pick_bfs_001",
@@ -419,23 +419,23 @@
       "choices": [
         {
           "id": "c1",
-          "label": "BFS (너비 우선)"
+          "label": "BFS로 거리 단위 확장"
         },
         {
           "id": "c2",
-          "label": "배열 이분 탐색"
+          "label": "DFS로 재귀 깊이 우선 탐색"
         },
         {
           "id": "c3",
-          "label": "투 포인터만"
+          "label": "다익스트라 + 우선순위 큐"
         },
         {
           "id": "c4",
-          "label": "스택으로만 해결"
+          "label": "A* (휴리스틱 + 우선순위 큐)"
         }
       ],
       "correctChoiceId": "c1",
-      "explanation": "가중치 없는 격자에서 최단 칸 수는 BFS가 표준입니다."
+      "explanation": "가중치가 없는 격자에서는 BFS가 처음 도달이 곧 최단을 보장합니다. DFS는 깊이 우선이라 먼저 도달한 경로가 최단이 아닐 수 있습니다. 다익스트라·A*는 일반 가중치/휴리스틱 문제용으로, 여기선 오버킬이고 같은 결과를 더 비싸게 냅니다."
     },
     {
       "id": "pick_arr_005",
@@ -2552,6 +2552,134 @@
       ],
       "correctChoiceId": "c1",
       "explanation": "subset sum 변형은 해시/투 포인터 조합이 흔합니다."
+    },
+    {
+      "id": "pick_stage_tp_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "pickSubtype": "application",
+      "stem": "오름차순 nums에서 left=0, right=len(nums)-1로 두 수의 합이 target인 쌍을 찾습니다. 합이 target보다 **작을** 때 갱신할 포인터는?",
+      "tags": [
+        "two_pointer"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "left를 1 증가"
+        },
+        {
+          "id": "c2",
+          "label": "right만 1 감소"
+        },
+        {
+          "id": "c3",
+          "label": "left와 right를 동시에 감소"
+        },
+        {
+          "id": "c4",
+          "label": "배열 전체를 다시 정렬"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "합이 작으면 더 큰 값이 필요하므로 left를 올립니다. right만 줄이면 합이 더 작아질 수 있습니다."
+    },
+    {
+      "id": "pick_stage_bs_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "pickSubtype": "application",
+      "stem": "오름차순 nums에서 l=0, r=n-1, mid=(l+r)//2로 x를 찾습니다. nums[mid] < x일 때 다음에 맞는 갱신은?",
+      "tags": [
+        "binary_search"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "l = mid + 1 (오른쪽 절반만 탐색)"
+        },
+        {
+          "id": "c2",
+          "label": "r = mid - 1 (왼쪽 절반만 탐색)"
+        },
+        {
+          "id": "c3",
+          "label": "l과 r을 모두 mid로"
+        },
+        {
+          "id": "c4",
+          "label": "배열을 역순으로 정렬"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "중간 값이 x보다 작으면 답은 mid 오른쪽에만 있을 수 있습니다."
+    },
+    {
+      "id": "pick_stage_stack_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "pickSubtype": "application",
+      "stem": "괄호 문자열을 왼쪽부터 읽으며, 여는 괄호는 push하고 닫는 괄호가 오면 **가장 최근에 연** 여는 괄호와 짝이 맞는지 볼 때 쓰는 연산은?",
+      "tags": [
+        "stack"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "스택 top과 짝이 맞으면 pop, 아니면 실패"
+        },
+        {
+          "id": "c2",
+          "label": "큐 front만 비교"
+        },
+        {
+          "id": "c3",
+          "label": "이분 탐색으로 mid 갱신"
+        },
+        {
+          "id": "c4",
+          "label": "해시로 complement 저장"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "LIFO 스택 top이 마지막으로 연 괄호와 짝을 맞춥니다."
+    },
+    {
+      "id": "pick_stage_bfs_001",
+      "type": "pick",
+      "version": 1,
+      "language": "python",
+      "pickSubtype": "application",
+      "stem": "가중치 없는 격자에서 시작에서 목표까지 **최소 칸 수**를 구할 때, 큐에서 꺼낸 칸의 **이웃 4칸**을 처리하는 순서가 중요한 이유는?",
+      "tags": [
+        "bfs"
+      ],
+      "difficulty": 1,
+      "choices": [
+        {
+          "id": "c1",
+          "label": "먼저 큐에 넣은 칸이 더 가까운 거리이므로 최단이 보장됨"
+        },
+        {
+          "id": "c2",
+          "label": "스택 LIFO라서 최단이 보장됨"
+        },
+        {
+          "id": "c3",
+          "label": "정렬 후 이분 탐색해야 최단이 보장됨"
+        },
+        {
+          "id": "c4",
+          "label": "해시만으로 거리가 자동 계산됨"
+        }
+      ],
+      "correctChoiceId": "c1",
+      "explanation": "BFS는 거리(레벨) 순으로 확장하므로 처음 목표에 도달할 때가 최단입니다."
     }
   ]
 }
