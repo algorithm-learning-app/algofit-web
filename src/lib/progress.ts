@@ -281,14 +281,15 @@ export function advanceAfterFeedback(
   return next;
 }
 
+export const DAILY_PERFECT_BONUS_XP = 20;
+
 export function completeDailyChallenge(
   progress: GuestProgress,
   session: DailySession,
 ): GuestProgress {
   const today = getTodaySeoul();
-  const allCorrect =
-    session.answers.length === DAILY_TOTAL &&
-    session.answers.every(Boolean);
+  const completed = session.answers.length === DAILY_TOTAL;
+  const allCorrect = completed && session.answers.every(Boolean);
 
   let next: GuestProgress = {
     ...progress,
@@ -298,11 +299,14 @@ export function completeDailyChallenge(
     lastDailyDate: today,
   };
 
-  const alreadyStreakedToday =
-    progress.lastDailyDate === today && progress.todayAllCorrect;
+  const alreadyCountedToday =
+    progress.lastDailyDate === today && progress.todayDailyCompleted;
 
-  if (allCorrect && !alreadyStreakedToday) {
+  if (completed && !alreadyCountedToday) {
     next = { ...next, streakCount: progress.streakCount + 1 };
+    if (allCorrect) {
+      next = addXp(next, DAILY_PERFECT_BONUS_XP);
+    }
   }
 
   saveProgress(next);

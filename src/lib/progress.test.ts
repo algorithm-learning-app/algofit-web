@@ -1,10 +1,12 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import {
   completeDailyChallenge,
+  DAILY_PERFECT_BONUS_XP,
   loadProgress,
   recordDailyAnswer,
   startDailySession,
 } from './progress';
+import { DAILY_TOTAL } from './daily';
 
 describe('progress daily hearts', () => {
   beforeEach(() => {
@@ -46,10 +48,68 @@ describe('progress persistence', () => {
     const saved = loadProgress();
     expect(saved.xp).toBeGreaterThan(0);
     expect(saved.streakCount).toBe(1);
+    expect(saved.todayAllCorrect).toBe(true);
 
     localStorage.removeItem('algofit:dailySession');
     const reloaded = loadProgress();
     expect(reloaded.xp).toBe(saved.xp);
     expect(reloaded.streakCount).toBe(saved.streakCount);
+  });
+});
+
+describe('daily streak — 친화적 규칙', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('5/5 정답: streak +1, 보너스 XP 추가', () => {
+    let progress = loadProgress();
+    let session = startDailySession();
+    const xpBefore = progress.xp;
+
+    for (let i = 0; i < DAILY_TOTAL; i += 1) {
+      const result = recordDailyAnswer(progress, session, true);
+      progress = result.progress;
+      session = result.session;
+    }
+    const final_ = completeDailyChallenge(progress, session);
+
+    expect(final_.streakCount).toBe(1);
+    expect(final_.todayAllCorrect).toBe(true);
+    expect(final_.xp - xpBefore).toBe(10 * DAILY_TOTAL + DAILY_PERFECT_BONUS_XP);
+  });
+
+  it('부분 정답: 챌린지 완료만으로 streak +1, 보너스 없음', () => {
+    let progress = loadProgress();
+    let session = startDailySession();
+    const xpBefore = progress.xp;
+
+    for (let i = 0; i < DAILY_TOTAL; i += 1) {
+      const isCorrect = i < 2;
+      const result = recordDailyAnswer(progress, session, isCorrect);
+      progress = result.progress;
+      session = result.session;
+    }
+    const final_ = completeDailyChallenge(progress, session);
+
+    expect(final_.streakCount).toBe(1);
+    expect(final_.todayAllCorrect).toBe(false);
+    expect(final_.xp - xpBefore).toBe(10 * DAILY_TOTAL);
+  });
+
+  it('전부 오답이어도 챌린지 완료 시 streak +1', () => {
+    let progress = loadProgress();
+    let session = startDailySession();
+
+    for (let i = 0; i < DAILY_TOTAL; i += 1) {
+      const result = recordDailyAnswer(progress, session, false);
+      progress = result.progress;
+      session = result.session;
+    }
+    const final_ = completeDailyChallenge(progress, session);
+
+    expect(final_.streakCount).toBe(1);
+    expect(final_.todayAllCorrect).toBe(false);
   });
 });

@@ -91,7 +91,7 @@ export default function Home() {
           <p className="daily-card__progress">
             {progress.dailyProgress}/{progress.dailyTotal}
           </p>
-          <p className="daily-card__hint">5문제 전부 정답 시 스트릭</p>
+          <p className="daily-card__hint">5문제 완료 시 스트릭 +1 (만점이면 보너스)</p>
 
           <Link to="/daily" className="btn-primary daily-card__cta">
             {progress.todayDailyCompleted ? '결과 보기' : progress.dailyProgress > 0 ? '이어하기' : '시작하기'}

@@ -10,6 +10,7 @@ import { effectiveCodeLanguage } from '../../lib/codeLanguage';
 import {
   advanceAfterFeedback,
   completeDailyChallenge,
+  DAILY_PERFECT_BONUS_XP,
   loadDailySession,
   loadProgress,
   recordDailyAnswer,
@@ -118,7 +119,8 @@ export default function DailyChallenge() {
       setCompleteSnapshot({
         allCorrect,
         streakCount: finalProgress.streakCount,
-        xpEarned: session.xpEarned,
+        xpEarned:
+          session.xpEarned + (allCorrect ? DAILY_PERFECT_BONUS_XP : 0),
       });
       navigate('/daily/complete', { replace: true });
       return;
