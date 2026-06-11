@@ -154,4 +154,32 @@ describe('passthrough (모바일 v6 필드 보존)', () => {
     expect(raw.world2Nodes).toEqual(['cleared']);
     expect(raw.unlockedBadgeIds).toEqual(['correct_10']);
   });
+
+  it('저장된 dailyTotal 등 daily 설정은 load+save 라운드트립에서 보존된다(웹 상수로 리셋 안 함)', () => {
+    // 모바일이 dailyTotal=7 등 웹 기본값과 다른 daily 설정으로 저장한 상태
+    localStorage.setItem(
+      'algofit:guestProgress',
+      JSON.stringify({
+        schemaVersion: 6,
+        guestId: 'g1',
+        xp: 0,
+        dailyTotal: 7,
+        dailyPickCount: 4,
+        dailyBlankCount: 3,
+      }),
+    );
+    const p = loadProgress();
+    // load 단계에서 보존
+    expect(p.dailyTotal).toBe(7);
+    expect(p.dailyPickCount).toBe(4);
+    expect(p.dailyBlankCount).toBe(3);
+
+    saveProgress({ ...p, xp: 1 });
+
+    const raw = loadRawProgress();
+    // save 단계에서도 웹 상수(5/3/2)로 덮어쓰지 않음
+    expect(raw.dailyTotal).toBe(7);
+    expect(raw.dailyPickCount).toBe(4);
+    expect(raw.dailyBlankCount).toBe(3);
+  });
 });

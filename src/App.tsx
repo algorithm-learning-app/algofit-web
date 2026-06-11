@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './screens/Home/Home';
 import DailyChallenge from './screens/Daily/DailyChallenge';
@@ -16,9 +17,17 @@ function Placeholder({ title }: { title: string }) {
 }
 
 export default function App() {
+  // 서버 진행 채택(adopt) 시 화면들이 loadProgress() 를 다시 읽도록 라우트를 재마운트한다.
+  const [adoptKey, setAdoptKey] = useState(0);
+  useEffect(() => {
+    const h = () => setAdoptKey((k) => k + 1);
+    window.addEventListener('algofit:progress-adopted', h);
+    return () => window.removeEventListener('algofit:progress-adopted', h);
+  }, []);
+
   return (
     <div className="app-shell">
-      <Routes>
+      <Routes key={adoptKey}>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/continue" element={<Continue />} />

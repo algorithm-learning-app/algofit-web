@@ -23,6 +23,17 @@ npm run dev
 
 게스트 진행: `localStorage` (`algofit:guestProgress`, `algofit:guestId`).
 
+## 서버 동기화 위협 모델
+
+서버 sync 는 `VITE_SYNC_*` 주입 시에만 켜집니다. 수용된 위협 모델은 다음과 같습니다.
+
+- `VITE_SYNC_SECRET` 은 빌드 번들에 평문으로 임베드됩니다.
+- 동기화 토큰은 `HMAC(SYNC_SECRET, guestId)` 이며 **만료가 없습니다**.
+- 따라서 시크릿 + 임의의 `guestId` 를 아는 사람은 해당 게스트의 (비민감) 진행을 읽거나 덮어쓸 수 있습니다.
+- 노출 대응: 서버의 `SYNC_SECRET` 을 로테이션하면 모든 클라이언트 토큰이 무효화됩니다(웹 재배포 필요).
+
+게스트 진행은 비민감 데이터이므로 이 범위는 의도된 수용 위험입니다.
+
 ## MVP 상태 (2026-05-19)
 
 **Must 완료** — Daily·`/continue`·`/profile`·PC 보너스·pick/blank 50·30 ([docs/05-mvp-scope.md](../../docs/05-mvp-scope.md))

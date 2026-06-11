@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
-  adoptServerProgress,
   ensureGuestId,
   loadProgress,
   saveProgress,
   type GuestProgress,
 } from '../../lib/progress';
 import { verifyHandoffToken } from '../../lib/handoff';
-import { pullProgress } from '../../lib/sync';
+import { applyPulled, pullProgress } from '../../lib/sync';
 import './Continue.css';
 
 type Status = 'idle' | 'working' | 'linked' | 'missing' | 'invalid';
@@ -47,7 +46,7 @@ export default function Continue() {
         localStorage.setItem('algofit:guestId', guestId);
         const pulled = await pullProgress(guestId);
         if (cancelled) return;
-        if (pulled) adoptServerProgress(pulled.data);
+        if (pulled) applyPulled(pulled);
         setProgress(loadProgress());
         setStatus('linked');
         return;

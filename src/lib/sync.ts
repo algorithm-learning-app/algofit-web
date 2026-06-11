@@ -108,7 +108,12 @@ export async function pushProgress(
 let suppress = false;
 let scheduled: ReturnType<typeof setTimeout> | null = null;
 
-function adopt(pulled: PulledProgress): void {
+/**
+ * 서버에서 받은 진행을 로컬에 채택하고 `algofit:sync:updatedAt` 를 서버 값으로 스탬프한다.
+ * handoff 경로(Continue.tsx)처럼 sync 모듈 밖에서 채택할 때도 이걸 써야 다음 저장이
+ * now() 로 새 타임스탬프를 찍어 서버를 덮어쓰는 일이 없다.
+ */
+export function applyPulled(pulled: PulledProgress): void {
   suppress = true;
   try {
     adoptServerProgress(pulled.data);
@@ -116,6 +121,10 @@ function adopt(pulled: PulledProgress): void {
   } finally {
     suppress = false;
   }
+}
+
+function adopt(pulled: PulledProgress): void {
+  applyPulled(pulled);
 }
 
 async function doPush(deps: SyncDeps, now: () => number): Promise<void> {

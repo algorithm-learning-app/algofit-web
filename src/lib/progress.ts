@@ -121,9 +121,17 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
     todayAllCorrect: Boolean(parsed.todayAllCorrect),
     dailyProgress:
       typeof parsed.dailyProgress === 'number' ? parsed.dailyProgress : 0,
-    dailyTotal: DAILY_TOTAL,
-    dailyPickCount: DEFAULT_PROGRESS.dailyPickCount,
-    dailyBlankCount: DEFAULT_PROGRESS.dailyBlankCount,
+    // 저장된 blob(모바일 등)의 daily 설정 값은 보존한다 — 매 저장마다 웹 상수로
+    // 덮어쓰면 다른 클라이언트의 dailyTotal/pick/blank 가 손상되기 때문.
+    dailyTotal: typeof parsed.dailyTotal === 'number' ? parsed.dailyTotal : DAILY_TOTAL,
+    dailyPickCount:
+      typeof parsed.dailyPickCount === 'number'
+        ? parsed.dailyPickCount
+        : DEFAULT_PROGRESS.dailyPickCount,
+    dailyBlankCount:
+      typeof parsed.dailyBlankCount === 'number'
+        ? parsed.dailyBlankCount
+        : DEFAULT_PROGRESS.dailyBlankCount,
     hearts: typeof parsed.hearts === 'number' ? parsed.hearts : 5,
     world1Nodes: Array.isArray(parsed.world1Nodes)
       ? (parsed.world1Nodes as GuestProgress['world1Nodes'])
@@ -218,6 +226,11 @@ export function adoptServerProgress(data: Record<string, unknown>): void {
     STORAGE_KEY,
     JSON.stringify({ ...data, guestId }),
   );
+  // 이미 마운트된 화면들이 stale 한 로컬 값을 표시하지 않도록 전역 신호를 보낸다.
+  // (adopt 는 saveProgress 를 우회해 React state 를 갱신하지 않으므로 명시적 통지가 필요)
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('algofit:progress-adopted'));
+  }
 }
 
 export function setPreferredCodeLanguage(languageId: string): GuestProgress {
