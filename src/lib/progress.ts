@@ -12,7 +12,7 @@ const GUEST_ID_KEY = 'algofit:guestId';
 const DAILY_SESSION_KEY = 'algofit:dailySession';
 
 export type GuestProgress = {
-  schemaVersion: 5;
+  schemaVersion: number;
   guestId: string;
   preferredCodeLanguage?: string | null;
   level: number;
@@ -43,8 +43,11 @@ export type DailySession = {
   startedAt: string;
 };
 
+// 모바일과 동기화 호환을 위해 v6 로 저장한다(모바일은 schemaVersion>=6 만 채택).
+const SCHEMA_VERSION = 6;
+
 const DEFAULT_PROGRESS: Omit<GuestProgress, 'guestId'> = {
-  schemaVersion: 5,
+  schemaVersion: SCHEMA_VERSION,
   preferredCodeLanguage: loadPreferredCodeLanguage(),
   level: 1,
   xp: 0,
@@ -103,7 +106,7 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
   return {
     ...DEFAULT_PROGRESS,
     guestId,
-    schemaVersion: 5,
+    schemaVersion: SCHEMA_VERSION,
     preferredCodeLanguage: storedLang,
     level: typeof parsed.level === 'number' ? parsed.level : DEFAULT_PROGRESS.level,
     xp: typeof parsed.xp === 'number' ? parsed.xp : DEFAULT_PROGRESS.xp,
@@ -170,14 +173,51 @@ export function loadProgress(): GuestProgress {
   }
 }
 
+/** STORAGE_KEY 의 원본 blob(웹이 모르는 필드 포함)을 그대로 읽는다. 없으면 {}. */
+export function loadRawProgress(): Record<string, unknown> {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+/** 저장 후 호출되는 훅(동기화 push 트리거 등). progress→sync 순환 import 방지용. */
+let onSaved: (() => void) | null = null;
+export function setOnSaved(cb: (() => void) | null): void {
+  onSaved = cb;
+}
+
 export function saveProgress(progress: GuestProgress): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  // 웹이 모르는 필드(모바일 v6: world2Nodes/scenario/badges/cleared·wrong ids 등)는
+  // 보존하고 웹이 관리하는 필드만 덮어쓴다 → 같은 guestId 의 모바일 진행을 손상시키지 않는다.
+  const merged = {
+    ...loadRawProgress(),
+    ...progress,
+    schemaVersion: SCHEMA_VERSION,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
   if (progress.preferredCodeLanguage) {
     localStorage.setItem(
       'algofit:preferredCodeLanguage',
       progress.preferredCodeLanguage,
     );
   }
+  onSaved?.();
+}
+
+/** 서버에서 받은 blob 을 로컬에 채택한다(미지 필드까지 통째로 보존). guestId 는 기기 값 유지. */
+export function adoptServerProgress(data: Record<string, unknown>): void {
+  const guestId = ensureGuestId();
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ ...data, guestId }),
+  );
 }
 
 export function setPreferredCodeLanguage(languageId: string): GuestProgress {
