@@ -222,13 +222,16 @@ export function saveProgress(progress: GuestProgress): void {
 /** 서버에서 받은 blob 을 로컬에 채택한다(미지 필드까지 통째로 보존). guestId 는 기기 값 유지. */
 export function adoptServerProgress(data: Record<string, unknown>): void {
   const guestId = ensureGuestId();
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ ...data, guestId }),
-  );
+  const next = JSON.stringify({ ...data, guestId });
+  const prev = localStorage.getItem(STORAGE_KEY);
+  localStorage.setItem(STORAGE_KEY, next);
   // 이미 마운트된 화면들이 stale 한 로컬 값을 표시하지 않도록 전역 신호를 보낸다.
   // (adopt 는 saveProgress 를 우회해 React state 를 갱신하지 않으므로 명시적 통지가 필요)
-  if (typeof window !== 'undefined') {
+  // 단, 저장된 blob 이 실제로 바뀐 경우에만 신호를 보낸다 — 동일 데이터를 다시
+  // 채택할 때 신호를 보내면 (App 의 key 리마운트 → Continue 재pull → adopt) 핸드오프
+  // 무한 루프가 발생한다. 첫 채택에서 blob 이 달라 신호 → 리마운트 → 같은 데이터 재채택
+  // 시 next === prev → 신호 없음 → 한 사이클 후 루프 종료.
+  if (next !== prev && typeof window !== 'undefined') {
     window.dispatchEvent(new Event('algofit:progress-adopted'));
   }
 }
