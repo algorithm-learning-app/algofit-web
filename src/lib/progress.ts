@@ -106,7 +106,9 @@ function parseWorldNode(raw: unknown): WorldNodeState {
  * 저장된 노드 배열을 스테이지 수에 맞춰 정규화한다(모바일 _normalizeWorld2Nodes 미러).
  * - 짧으면 'locked' 로 패딩, 길면 잘라낸다.
  * - 미지 문자열은 'locked' 로.
- * - 모든 노드가 cleared 인데 다음 노드가 남아 있으면(=패딩으로 생긴 locked) 첫 locked 를 current 로 승격.
+ * - 승격 규칙(모바일 동일): 저장 길이 oldLen 이 0 < oldLen < stageCount 이고
+ *   기존 항목이 *전부* cleared 인 경우에만, 첫 패딩 슬롯 nodes[oldLen] 을 current 로 승격한다.
+ *   부분 진행(일부 cleared, current 없음)은 합성된 current 를 만들지 않는다.
  */
 function normalizeWorldNodes(
   raw: unknown,
@@ -115,15 +117,19 @@ function normalizeWorldNodes(
 ): WorldNodeState[] {
   if (!Array.isArray(raw)) return [...fallback];
   const parsed = raw.map(parseWorldNode);
-  const nodes = parsed.slice(0, stageCount);
+
+  // 더 긴 배열은 잘라내고 반환(트림). 패딩 후 승격 로직은 적용하지 않는다.
+  if (parsed.length >= stageCount) return parsed.slice(0, stageCount);
+
+  const oldLen = parsed.length;
+  const allOldCleared = oldLen > 0 && parsed.every((n) => n === 'cleared');
+
+  const nodes = [...parsed];
   while (nodes.length < stageCount) nodes.push('locked');
 
-  const hasCurrent = nodes.some((n) => n === 'current');
-  const hasCleared = nodes.some((n) => n === 'cleared');
-  if (!hasCurrent && hasCleared) {
-    // 기존 항목이 모두 cleared 인데 패딩으로 잠긴 노드가 생긴 경우 → 다음 노드를 current 로.
-    const firstLocked = nodes.indexOf('locked');
-    if (firstLocked !== -1) nodes[firstLocked] = 'current';
+  // 기존 항목이 전부 cleared 일 때만 첫 패딩 슬롯을 current 로 승격.
+  if (allOldCleared && oldLen < stageCount) {
+    nodes[oldLen] = 'current';
   }
   return nodes;
 }
@@ -452,7 +458,10 @@ export function completeDailyChallenge(
   return next;
 }
 
-/** 스테이지 문항당 XP — 모바일 stageXpPerQuestion 과 동일. */
+/**
+ * 스테이지 클리어 1회당 정액 XP — 모바일 stageXpPerQuestion(=10) 과 동일.
+ * 모바일 completeStage 는 세트 크기와 무관하게 클리어당 10 XP 를 정액 지급한다.
+ */
 export const STAGE_XP_PER_QUESTION = 10;
 
 export function nodesForWorld(progress: GuestProgress, worldId: number): WorldNodeState[] {
@@ -492,14 +501,14 @@ function advanceNodesAfterClear(
  * 스테이지 클리어를 진행에 반영한다(모바일 WorldProgressService.completeStage 미러).
  * - 노드를 cleared 로, 다음 노드를 current 로 승격.
  * - World 1 클리어 수 >= 7 이면 World 2 해금.
- * - XP 지급(STAGE_XP_PER_QUESTION * 세트 문항 수). 이미 클리어한 스테이지는 XP 없음.
+ * - XP 지급: 클리어당 정액 STAGE_XP_PER_QUESTION(=10). 세트 크기와 무관(모바일 미러).
+ *   이미 클리어한 스테이지는 XP 0 + 노드 무변경(멱등 — 모바일 alreadyCleared).
  * - saveProgress 호출 → sync push 트리거.
  */
 export function completeWorldStage(
   progress: GuestProgress,
   worldId: number,
   stageOrder: number,
-  questionCount: number,
 ): GuestProgress {
   const def = worldById(worldId);
   if (!def) return progress;
@@ -510,13 +519,12 @@ export function completeWorldStage(
   const idx = stageOrder - 1;
   const alreadyCleared = idx >= 0 && idx < nodes.length && nodes[idx] === 'cleared';
 
-  const updatedNodes = alreadyCleared
-    ? [...nodes]
-    : advanceNodesAfterClear(nodes, stageOrder, stageCount);
+  // 이미 클리어된 스테이지는 멱등: XP·노드 모두 그대로 두고 진행을 변경하지 않는다.
+  if (alreadyCleared) return progress;
 
-  let next: GuestProgress = alreadyCleared
-    ? progress
-    : addXp(progress, STAGE_XP_PER_QUESTION * Math.max(0, questionCount));
+  const updatedNodes = advanceNodesAfterClear(nodes, stageOrder, stageCount);
+
+  let next: GuestProgress = addXp(progress, STAGE_XP_PER_QUESTION);
 
   next =
     worldId === 1

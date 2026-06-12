@@ -47,39 +47,68 @@ describe('스테이지 진행', () => {
 
   it('스테이지 클리어 시 노드가 cleared 되고 다음 노드가 current 로 승격된다', () => {
     const p = loadProgress();
-    const next = completeWorldStage(p, 1, 1, 2);
+    const next = completeWorldStage(p, 1, 1);
     expect(next.world1Nodes[0]).toBe('cleared');
     expect(next.world1Nodes[1]).toBe('current');
     expect(next.world1Nodes[2]).toBe('locked');
   });
 
-  it('클리어 시 문항당 XP 가 지급된다', () => {
+  it('클리어 시 세트 크기와 무관하게 정액 XP(10) 가 지급된다(모바일 미러)', () => {
     const p = loadProgress();
-    const next = completeWorldStage(p, 1, 1, 2);
-    expect(next.xp - p.xp).toBe(STAGE_XP_PER_QUESTION * 2);
+    const next = completeWorldStage(p, 1, 1);
+    expect(next.xp - p.xp).toBe(STAGE_XP_PER_QUESTION);
+    expect(STAGE_XP_PER_QUESTION).toBe(10);
   });
 
-  it('이미 클리어한 스테이지는 XP 를 다시 주지 않는다', () => {
+  it('이미 클리어한 스테이지는 XP 를 다시 주지 않고 진행도 그대로다(멱등)', () => {
     let p = loadProgress();
-    p = completeWorldStage(p, 1, 1, 2);
+    p = completeWorldStage(p, 1, 1);
     const xpAfterFirst = p.xp;
-    p = completeWorldStage(p, 1, 1, 2);
-    expect(p.xp).toBe(xpAfterFirst);
+    const nodesAfterFirst = [...p.world1Nodes];
+    const again = completeWorldStage(p, 1, 1);
+    expect(again.xp).toBe(xpAfterFirst);
+    expect(again.world1Nodes).toEqual(nodesAfterFirst);
   });
 
   it('World 1 스테이지 7개 클리어 시 World 2 가 해금된다', () => {
     let p = loadProgress();
     expect(p.world2Unlocked).toBe(false);
     for (let order = 1; order <= WORLD2_UNLOCK_CLEARED_COUNT; order += 1) {
-      p = completeWorldStage(p, 1, order, 2);
+      p = completeWorldStage(p, 1, order);
     }
     expect(p.world2Unlocked).toBe(true);
     expect(p.world2Nodes[0]).toBe('current');
   });
 
+  it('이미 해금된 World 2 진행은 추가 World 1 클리어 시 리셋되지 않는다', () => {
+    // world2Unlocked=true 이고 world2 에 일부 cleared 진행이 있는 동기화 blob.
+    const world2 = Array.from({ length: WORLD2_TOTAL_STAGES }, (_, i) =>
+      i < 2 ? 'cleared' : i === 2 ? 'current' : 'locked',
+    );
+    const world1 = Array.from({ length: WORLD1_TOTAL_STAGES }, (_, i) =>
+      i < WORLD2_UNLOCK_CLEARED_COUNT
+        ? 'cleared'
+        : i === WORLD2_UNLOCK_CLEARED_COUNT
+          ? 'current'
+          : 'locked',
+    );
+    writeStored({
+      schemaVersion: 6,
+      world2Unlocked: true,
+      world1Nodes: world1,
+      world2Nodes: world2,
+    });
+    const p = loadProgress();
+    expect(p.world2Unlocked).toBe(true);
+    // World 1 의 다음 스테이지(8번째)를 추가로 클리어 → world2 는 그대로여야 한다.
+    const next = completeWorldStage(p, 1, WORLD2_UNLOCK_CLEARED_COUNT + 1);
+    expect(next.world2Unlocked).toBe(true);
+    expect(next.world2Nodes).toEqual(world2);
+  });
+
   it('World 2 가 잠긴 상태에서는 World 2 스테이지를 클리어할 수 없다', () => {
     const p = loadProgress();
-    const next = completeWorldStage(p, 2, 1, 2);
+    const next = completeWorldStage(p, 2, 1);
     expect(next).toBe(p);
   });
 });
@@ -112,7 +141,7 @@ describe('노드 정규화 (마이그레이션)', () => {
     expect(p.world2Nodes).toHaveLength(WORLD2_TOTAL_STAGES);
   });
 
-  it('기존 항목이 모두 cleared 면 패딩 후 다음 노드가 current 로 승격된다', () => {
+  it('기존 항목이 모두 cleared 면 첫 패딩 슬롯(nodes[oldLen])이 current 로 승격된다', () => {
     writeStored({
       schemaVersion: 6,
       world1Nodes: ['cleared', 'cleared', 'cleared'],
@@ -122,6 +151,21 @@ describe('노드 정규화 (마이그레이션)', () => {
     expect(p.world1Nodes[0]).toBe('cleared');
     expect(p.world1Nodes[2]).toBe('cleared');
     expect(p.world1Nodes[3]).toBe('current');
+    expect(p.world1Nodes.slice(4).every((n) => n === 'locked')).toBe(true);
+  });
+
+  it('부분 진행(일부만 cleared, current 없음)은 합성된 current 를 만들지 않는다', () => {
+    // [cleared, cleared, locked] → 전부 cleared 가 아니므로 승격하지 않는다.
+    writeStored({
+      schemaVersion: 6,
+      world1Nodes: ['cleared', 'cleared', 'locked'],
+    });
+    const p = loadProgress();
+    expect(p.world1Nodes).toHaveLength(WORLD1_TOTAL_STAGES);
+    expect(p.world1Nodes[0]).toBe('cleared');
+    expect(p.world1Nodes[1]).toBe('cleared');
+    expect(p.world1Nodes.slice(2).every((n) => n === 'locked')).toBe(true);
+    expect(p.world1Nodes.some((n) => n === 'current')).toBe(false);
   });
 
   it('모바일 20/15 길이 배열은 줄어들지 않고 보존된다(sync 무손실)', () => {
@@ -144,7 +188,7 @@ describe('노드 정규화 (마이그레이션)', () => {
   it('저장 시 world 필드가 v6 blob 에 직렬화된다(모바일 미지 필드 보존)', () => {
     writeStored({ schemaVersion: 6, scenarioNodes: ['x'], unlockedBadgeIds: ['b1'] });
     let p = loadProgress();
-    p = completeWorldStage(p, 1, 1, 2);
+    p = completeWorldStage(p, 1, 1);
     const blob = JSON.parse(localStorage.getItem(STORAGE_KEY)!) as Record<string, unknown>;
     expect(blob.world1Nodes).toBeDefined();
     expect(blob.world2Nodes).toBeDefined();

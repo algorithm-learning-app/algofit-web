@@ -21,8 +21,10 @@ export default function StagePlay() {
     worldId: string;
     stageOrder: string;
   }>();
-  const worldId = Number(worldIdParam);
-  const stageOrder = Number(stageOrderParam);
+  const worldIdRaw = Number.parseInt(worldIdParam ?? '', 10);
+  const stageOrderRaw = Number.parseInt(stageOrderParam ?? '', 10);
+  const worldId = Number.isFinite(worldIdRaw) ? worldIdRaw : NaN;
+  const stageOrder = Number.isFinite(stageOrderRaw) ? stageOrderRaw : NaN;
 
   const progress = useMemo(() => loadProgress(), []);
   const def = worldById(worldId);
@@ -44,7 +46,8 @@ export default function StagePlay() {
   const [complete, setComplete] = useState(false);
 
   const setSize = questions.length;
-  const xpEarned = STAGE_XP_PER_QUESTION * setSize;
+  // 스테이지 클리어 보상은 세트 크기와 무관한 정액 XP(모바일 미러).
+  const xpEarned = STAGE_XP_PER_QUESTION;
 
   function backToMap() {
     navigate('/learn');
@@ -70,9 +73,9 @@ export default function StagePlay() {
       setLastCorrect(null);
       return;
     }
-    // 세트 전부 정답 → 스테이지 클리어.
+    // 세트 전부 정답 → 스테이지 클리어. 클리어 시점의 최신 진행을 다시 읽어 반영한다.
     if (stage) {
-      completeWorldStage(progress, worldId, stage.order, setSize);
+      completeWorldStage(loadProgress(), worldId, stage.order);
     }
     setShowFeedback(false);
     setComplete(true);
