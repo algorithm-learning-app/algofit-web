@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "type": "scenario_map",
+  "updatedAt": "2026-05-24",
+  "questions": [
+    {
+      "id": "scenario_array_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "주차장 운영자가 출차 정산을 합니다. 입차 순서대로 차량 번호판 목록을 받아, **VIP 번호판이 몇 대 들어왔는지** 한 번에 세고 싶습니다. 목록은 정렬되어 있지 않고 한 바퀴만 훑어도 됩니다.",
+      "scenarioCategory": "aggregation",
+      "tags": ["array"],
+      "difficulty": 1,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "배열을 한 번 순회하며 조건에 맞는 원소 카운트", "patternTag": "array" },
+        { "id": "p2", "label": "이분 탐색으로 VIP 인덱스 찾기", "patternTag": "binary_search" },
+        { "id": "p3", "label": "BFS로 격자 칸 수 세기", "patternTag": "bfs" },
+        { "id": "p4", "label": "스택에 모두 push 후 pop으로 세기", "patternTag": "stack" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "정렬되지 않은 목록을 단일 패스로 조건 카운트하는 전형적인 배열 순회입니다. 이분 탐색은 정렬·단조성이 전제, BFS·스택은 카운팅 자체와 무관합니다."
+    },
+    {
+      "id": "scenario_array_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "운영팀이 일별 매출 그래프를 그리려고 합니다. 하루치 시간순 매출 로그를 받아, **연속된 7시간 동안 매출 합이 가장 큰 구간**을 찾고 싶습니다. 로그는 정렬되어 있지만 길이는 길 수 있어 모든 부분 합을 다시 계산하긴 어렵습니다.",
+      "scenarioCategory": "aggregation",
+      "tags": ["array"],
+      "difficulty": 2,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "고정 길이 윈도우를 한 칸씩 밀며 합 갱신 (슬라이딩 윈도우)", "patternTag": "array" },
+        { "id": "p2", "label": "이분 탐색으로 경계 찾기", "patternTag": "binary_search" },
+        { "id": "p3", "label": "스택으로 최근 7개 push/pop", "patternTag": "stack" },
+        { "id": "p4", "label": "해시 맵에 시간별 합 저장 후 lookup", "patternTag": "hash" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "고정 길이 구간의 합을 매번 다시 더하지 않고 빠지는 값·들어오는 값만 갱신하는 슬라이딩 윈도우입니다. 윈도우 합 패턴은 배열 순회의 변형입니다.",
+      "metadata": {
+        "createdAt": "2026-05-24"
+      }
+    },
+    {
+      "id": "scenario_two_pointer_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "데이팅 앱 백오피스에서 회원 매칭을 합니다. 활동 점수 기준으로 **정렬된** 회원 목록을 가지고, 두 회원의 점수 합이 정확히 목표 K가 되는 쌍이 있는지 확인합니다. 메모리는 가능하면 추가로 쓰지 않는 게 좋습니다.",
+      "scenarioCategory": "matching",
+      "tags": ["two_pointer"],
+      "difficulty": 1,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "양 끝에서 시작해 합에 따라 좁히는 투 포인터", "patternTag": "two_pointer" },
+        { "id": "p2", "label": "해시 set에 보수 저장 후 조회", "patternTag": "hash" },
+        { "id": "p3", "label": "BFS로 그래프 매칭", "patternTag": "bfs" },
+        { "id": "p4", "label": "스택에 push하며 합 갱신", "patternTag": "stack" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "정렬된 목록 + 추가 메모리 최소화 + 두 수 합 = 투 포인터의 전형 신호입니다. 해시 set은 정렬이 없을 때 더 적합합니다."
+    },
+    {
+      "id": "scenario_two_pointer_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "쇼핑몰 검색팀이 검색어 자동완성 후처리를 검토합니다. 사용자가 입력한 문자열이 **회문(앞뒤가 같은 문자열)** 인지 확인하고 싶은데, 추가 문자열 복사 없이 같은 메모리에서 처리하고 싶습니다.",
+      "scenarioCategory": "search_filter",
+      "tags": ["two_pointer"],
+      "difficulty": 1,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "양 끝 인덱스를 안쪽으로 좁히며 비교", "patternTag": "two_pointer" },
+        { "id": "p2", "label": "이분 탐색으로 중간 문자 찾기", "patternTag": "binary_search" },
+        { "id": "p3", "label": "BFS로 문자 그래프 탐색", "patternTag": "bfs" },
+        { "id": "p4", "label": "해시 맵에 빈도 저장 후 비교", "patternTag": "hash" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "회문 검사는 양 끝 포인터를 안쪽으로 좁히는 투 포인터의 가장 단순한 형태입니다. 빈도 해시는 애너그램 검사에는 맞지만 회문 위치 비교에는 과합니다."
+    },
+    {
+      "id": "scenario_hash_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "공개 API를 운영하는데, **사용자당 1분에 100회 초과 호출을 차단**해야 합니다. 같은 사용자의 최근 1분간 호출 횟수를 O(1)에 가까운 비용으로 조회·갱신하고 싶습니다.",
+      "scenarioCategory": "limits_security",
+      "tags": ["hash"],
+      "difficulty": 2,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "사용자 ID → 최근 호출 큐/카운터를 해시 맵에 저장", "patternTag": "hash" },
+        { "id": "p2", "label": "정렬된 호출 시각 배열에 이분 탐색", "patternTag": "binary_search" },
+        { "id": "p3", "label": "BFS로 호출 그래프 순회", "patternTag": "bfs" },
+        { "id": "p4", "label": "스택에 호출 시각 push만", "patternTag": "stack" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "modelingQuestion": {
+        "stem": "구현에 들어가기 전, 이 상황을 가장 먼저 무엇으로 놓는 게 자연스러울까요?",
+        "choices": [
+          { "id": "m1", "label": "사용자 ID를 키로 한 해시 맵" },
+          { "id": "m2", "label": "정렬된 1차원 배열" },
+          { "id": "m3", "label": "격자/그래프" },
+          { "id": "m4", "label": "단일 정수 카운터 하나" }
+        ],
+        "correctChoiceId": "m1"
+      },
+      "explanation": "사용자별 독립 카운터는 키 기반 O(1) 조회가 핵심 — 해시 맵이 전형입니다. 정렬 배열·BFS는 사용자별 격리에 비효율적입니다."
+    },
+    {
+      "id": "scenario_hash_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "음악 앱이 **가장 많이 재생된 곡 Top-K**를 화면에 보여줍니다. 하루치 재생 로그(곡 ID 나열)를 받아 각 곡의 빈도를 세고 상위 K개를 뽑습니다. 로그는 정렬되어 있지 않습니다.",
+      "scenarioCategory": "aggregation",
+      "tags": ["hash"],
+      "difficulty": 2,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "곡 ID → 빈도 해시 맵 + 빈도 기준 정렬", "patternTag": "hash" },
+        { "id": "p2", "label": "양 끝 투 포인터로 가장 빈번한 ID 추적", "patternTag": "two_pointer" },
+        { "id": "p3", "label": "BFS로 재생 그래프 순회", "patternTag": "bfs" },
+        { "id": "p4", "label": "이분 탐색으로 곡 ID 위치 찾기", "patternTag": "binary_search" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "빈도 카운팅은 키→값 매핑이 필요해 해시 맵이 적합합니다. 투 포인터는 정렬·구간 문제, 이분은 정렬된 단조성에 씁니다."
+    },
+    {
+      "id": "scenario_binary_search_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "이커머스 어드민이 가격대 필터를 만듭니다. **정렬된** 상품 가격 목록(수십만 개)에서 사용자가 입력한 가격 이상이 처음 나오는 위치를 찾아야 합니다. 매 요청마다 전부 훑기는 부담스럽습니다.",
+      "scenarioCategory": "search_filter",
+      "tags": ["binary_search"],
+      "difficulty": 1,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "이분 탐색으로 lower bound 찾기", "patternTag": "binary_search" },
+        { "id": "p2", "label": "선형 스캔으로 처음 만족 인덱스", "patternTag": "array" },
+        { "id": "p3", "label": "해시 맵에 가격→인덱스 저장", "patternTag": "hash" },
+        { "id": "p4", "label": "스택으로 가격 push/pop", "patternTag": "stack" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "정렬된 데이터 + 경계 찾기 = 이분 탐색의 표준 신호입니다. 선형 스캔도 정답을 주지만 O(n)이라 대규모에서는 부적합합니다."
+    },
+    {
+      "id": "scenario_binary_search_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "운영팀이 장애 로그를 분석합니다. **시각 오름차순으로 정렬된** 이벤트 목록에서 처음으로 ERROR 레벨이 나타난 시각을 찾아야 합니다. 로그는 매우 길고, 단조성(앞 정상 → 뒤 에러)은 보장됩니다.",
+      "scenarioCategory": "scheduling",
+      "tags": ["binary_search"],
+      "difficulty": 2,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "정렬·단조성 위에서 이분 탐색", "patternTag": "binary_search" },
+        { "id": "p2", "label": "BFS로 시각 그래프 탐색", "patternTag": "bfs" },
+        { "id": "p3", "label": "투 포인터로 양 끝 좁히기", "patternTag": "two_pointer" },
+        { "id": "p4", "label": "해시 맵에 시각→레벨 저장", "patternTag": "hash" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "정렬 + 조건 단조성(앞은 false, 뒤는 true)은 lower_bound식 이분 탐색의 정답 신호입니다. 투 포인터는 양 끝 합·구간에 더 자주 쓰입니다."
+    },
+    {
+      "id": "scenario_stack_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "에디터에 **Undo 버튼**을 만듭니다. 사용자가 글자 입력·삭제를 반복하는데, 최근 동작을 한 번에 되돌리고 다시 그 이전 동작도 되돌릴 수 있어야 합니다. **가장 최근 동작이 가장 먼저 취소**되어야 합니다.",
+      "scenarioCategory": "inventory",
+      "tags": ["stack"],
+      "difficulty": 1,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "동작을 push, 되돌릴 때 pop하는 스택", "patternTag": "stack" },
+        { "id": "p2", "label": "큐(FIFO)에 동작 저장", "patternTag": "bfs" },
+        { "id": "p3", "label": "해시 맵에 동작 ID 저장", "patternTag": "hash" },
+        { "id": "p4", "label": "이분 탐색으로 동작 위치 찾기", "patternTag": "binary_search" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "‘나중에 넣은 것을 먼저 꺼낸다’는 LIFO 신호는 스택의 정의 그 자체입니다. 큐는 가장 오래된 것부터 꺼내므로 Undo와 반대 방향입니다."
+    },
+    {
+      "id": "scenario_stack_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "프론트엔드 빌드 도구가 사용자 입력 표현식의 **괄호가 올바르게 짝지어졌는지** 검사합니다. 여는 괄호 종류는 `(`, `[`, `{` 세 가지이며 각각 짝이 맞아야 합니다.",
+      "scenarioCategory": "search_filter",
+      "tags": ["stack"],
+      "difficulty": 1,
+      "tone": "neutral",
+      "patternChoices": [
+        { "id": "p1", "label": "여는 괄호 push, 닫는 괄호 만나면 top과 비교 후 pop", "patternTag": "stack" },
+        { "id": "p2", "label": "해시 맵에 괄호 종류별 개수 저장 후 합 비교", "patternTag": "hash" },
+        { "id": "p3", "label": "BFS로 괄호 그래프 탐색", "patternTag": "bfs" },
+        { "id": "p4", "label": "이분 탐색으로 닫는 괄호 위치 찾기", "patternTag": "binary_search" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "괄호 매칭은 가장 최근 여는 괄호와 짝이 맞는지 확인하는 LIFO 작업입니다. 단순 개수 비교(해시)는 `([)]`처럼 잘못된 중첩을 통과시킵니다."
+    },
+    {
+      "id": "scenario_bfs_001",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "지도 앱이 사용자의 현재 위치에서 가장 가까운 편의점까지의 **최소 이동 칸 수**를 알려줍니다. 지도는 격자이고, 도로는 통과 가능, 건물 칸은 막혔습니다. 이동은 상하좌우만 가능합니다.",
+      "scenarioCategory": "navigation",
+      "tags": ["bfs"],
+      "difficulty": 2,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "출발 칸에서 큐 기반 BFS로 최단 거리", "patternTag": "bfs" },
+        { "id": "p2", "label": "이분 탐색으로 거리 후보 검사", "patternTag": "binary_search" },
+        { "id": "p3", "label": "스택 DFS로 깊이 우선", "patternTag": "stack" },
+        { "id": "p4", "label": "해시 맵에 좌표→거리 저장 후 lookup", "patternTag": "hash" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "modelingQuestion": {
+        "stem": "구현에 들어가기 전, 이 상황을 가장 먼저 무엇으로 놓는 게 자연스러울까요?",
+        "choices": [
+          { "id": "m1", "label": "격자(2D 배열) + 인접 칸 간선" },
+          { "id": "m2", "label": "정렬된 1차원 배열" },
+          { "id": "m3", "label": "단일 정수 카운터" },
+          { "id": "m4", "label": "키→값 해시 맵 하나" }
+        ],
+        "correctChoiceId": "m1"
+      },
+      "explanation": "‘격자에서 칸 수 최소’는 BFS의 가장 전형적인 신호입니다. DFS는 최단 거리를 보장하지 않고, 이분 탐색은 단조성이 있는 값에 씁니다."
+    },
+    {
+      "id": "scenario_bfs_002",
+      "type": "scenario_map",
+      "version": 1,
+      "language": "python",
+      "stem": "배달 앱이 **여러 픽업 지점**에서 동시에 음식이 식기 시작합니다. 각 칸이 가장 가까운 픽업 지점까지 몇 칸 떨어졌는지를 한 번에 계산해, 어느 칸이 먼저 식는지 보여주려 합니다. 이동은 상하좌우만 가능하고 일부 칸은 막혀 있습니다.",
+      "scenarioCategory": "logistics",
+      "tags": ["bfs"],
+      "difficulty": 3,
+      "tone": "playful",
+      "patternChoices": [
+        { "id": "p1", "label": "모든 픽업 지점을 초기 큐에 넣는 멀티 소스 BFS", "patternTag": "bfs" },
+        { "id": "p2", "label": "각 지점마다 따로 이분 탐색", "patternTag": "binary_search" },
+        { "id": "p3", "label": "스택 DFS로 깊이 우선 탐색", "patternTag": "stack" },
+        { "id": "p4", "label": "해시 맵에 (좌표→거리) 직접 저장", "patternTag": "hash" }
+      ],
+      "primaryPatternIds": ["p1"],
+      "explanation": "여러 출발점에서 격자 전체의 최단 거리를 한 번에 구하는 작업은 멀티 소스 BFS입니다. 지점마다 개별 BFS를 돌면 중복 비용이 큽니다."
+    }
+  ]
+}

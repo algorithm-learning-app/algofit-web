@@ -132,6 +132,19 @@ export default function Home() {
           </span>
         </Link>
 
+        <Link to="/scenario" className="scenario-card">
+          <span className="scenario-card__badge">실전</span>
+          <div className="scenario-card__body">
+            <p className="scenario-card__title">실전 시나리오</p>
+            <p className="scenario-card__desc">
+              실무 상황을 읽고 알맞은 알고리즘 패턴 고르기 · 최대 5문제
+            </p>
+          </div>
+          <span className="scenario-card__arrow" aria-hidden>
+            →
+          </span>
+        </Link>
+
         <section className="world-preview" aria-labelledby="world-title">
           <div className="world-preview__head">
             <h2 id="world-title" className="world-preview__title">

@@ -262,6 +262,49 @@
   font-size: 1.125rem;
 }
 
+.scenario-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 12px var(--space-16);
+  background: rgba(45, 212, 191, 0.1);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  border-radius: var(--radius-card);
+  font-size: 0.875rem;
+}
+
+.scenario-card__badge {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #0f172a;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.scenario-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.scenario-card__title {
+  margin: 0 0 2px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.scenario-card__desc {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.scenario-card__arrow {
+  color: var(--color-primary);
+  font-size: 1.125rem;
+}
+
 .world-preview {
   background: var(--color-surface);
   border-radius: var(--radius-card);
