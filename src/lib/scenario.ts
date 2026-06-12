@@ -34,25 +34,43 @@ export const SCENARIO_XP_PER_QUESTION = 15;
 /** 한 세션 문항 수(스펙: 3~5문항). 풀이 길이가 길어 5로 둔다. */
 export const SCENARIO_SESSION_SIZE = 5;
 
-function parseChoice(raw: unknown): ScenarioPatternChoice {
+/** id 가 없거나 비면 malformed 선택지로 보고 null(상위에서 skip). */
+function parseChoice(raw: unknown): ScenarioPatternChoice | null {
   const o = (raw ?? {}) as Record<string, unknown>;
+  const id = readId(o.id);
+  if (id === null) return null;
   return {
-    id: String(o.id),
+    id,
     label: String(o.label),
     patternTag: typeof o.patternTag === 'string' ? o.patternTag : '',
   };
 }
 
-function parseQuestion(raw: unknown): ScenarioQuestion {
+/** 빈 문자열이 아닌 문자열 id 만 반환, 아니면 null. */
+function readId(raw: unknown): string | null {
+  if (typeof raw === 'string' && raw.length > 0) return raw;
+  if (typeof raw === 'number' && Number.isFinite(raw)) return String(raw);
+  return null;
+}
+
+/**
+ * 한 문항을 파싱한다. id 가 없거나 비면 malformed 로 보고 null 을 돌려준다
+ * (모바일 fromJson 의 fail-fast 와 동일한 취지 — 단 web 은 해당 항목만 skip).
+ */
+function parseQuestion(raw: unknown): ScenarioQuestion | null {
   const o = (raw ?? {}) as Record<string, unknown>;
+  const id = readId(o.id);
+  if (id === null) return null;
   return {
-    id: String(o.id),
+    id,
     stem: String(o.stem),
     scenarioCategory:
       typeof o.scenarioCategory === 'string' ? o.scenarioCategory : '',
     difficulty: typeof o.difficulty === 'number' ? Math.trunc(o.difficulty) : 1,
     patternChoices: Array.isArray(o.patternChoices)
-      ? o.patternChoices.map(parseChoice)
+      ? o.patternChoices
+          .map(parseChoice)
+          .filter((c): c is ScenarioPatternChoice => c !== null)
       : [],
     primaryPatternIds: Array.isArray(o.primaryPatternIds)
       ? o.primaryPatternIds.map((e) => String(e))
@@ -63,21 +81,28 @@ function parseQuestion(raw: unknown): ScenarioQuestion {
   };
 }
 
+/** 원시 questions 배열을 파싱하고 malformed(id 없음) 항목은 걸러낸다. */
+function parseQuestionList(raw: unknown): ScenarioQuestion[] {
+  const questions = Array.isArray(raw) ? raw : [];
+  return questions
+    .map(parseQuestion)
+    .filter((q): q is ScenarioQuestion => q !== null);
+}
+
 /** scenario.json 번들 문자열을 파싱한다(모바일 parseScenarios 미러). */
 export function parseScenarios(jsonStr: string): ScenarioQuestion[] {
   const data = JSON.parse(jsonStr) as Record<string, unknown>;
-  const questions = Array.isArray(data.questions) ? data.questions : [];
-  return questions.map(parseQuestion);
+  return parseQuestionList(data.questions);
 }
 
-/** 번들에서 시나리오 전체를 로드한다. */
+/** 모듈 스코프 캐시 — 정적 번들은 한 번만 파싱한다(화면 마운트마다 재파싱 방지). */
+let _all: ScenarioQuestion[] | null = null;
+
+/** 번들에서 시나리오 전체를 로드한다(최초 1회 파싱 후 캐시). */
 export function loadScenarios(): ScenarioQuestion[] {
-  const questions = Array.isArray(
+  return (_all ??= parseQuestionList(
     (scenarioBundle as { questions?: unknown }).questions,
-  )
-    ? (scenarioBundle as { questions: unknown[] }).questions
-    : [];
-  return questions.map(parseQuestion);
+  ));
 }
 
 /** 고른 선택지 id 가 정답 집합(primaryPatternIds)에 들어있으면 정답. */

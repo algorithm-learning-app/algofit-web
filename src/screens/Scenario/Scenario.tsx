@@ -39,6 +39,8 @@ export default function Scenario() {
     if (selected === null || showFeedback) return;
     const question = session[index];
     const correct = isCorrectChoice(question, selected);
+    // 반환값을 쓰지 않고 localStorage 영속화에만 의존한다(모바일 동작과 동일).
+    // 누적 XP 는 다음 loadProgress() 읽기 시점에 반영된다.
     recordScenarioAnswer(loadProgress(), correct);
     setLastCorrect(correct);
     setShowFeedback(true);

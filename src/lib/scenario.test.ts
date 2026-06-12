@@ -28,6 +28,18 @@ describe('parseScenarios / loadScenarios', () => {
     expect(first.patternChoices.length).toBeGreaterThan(0);
     expect(first.primaryPatternIds.length).toBeGreaterThan(0);
   });
+
+  it('id 가 없는(malformed) 항목은 건너뛰고 정상 항목만 파싱한다', () => {
+    const valid = scenarioBundle.questions[0];
+    const malformed = { ...valid, id: undefined };
+    const parsed = parseScenarios(
+      JSON.stringify({ questions: [malformed, valid] }),
+    );
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].id).toBe(valid.id);
+    // "undefined" 리터럴 id 가 생기지 않는다.
+    expect(parsed.some((q) => q.id === 'undefined')).toBe(false);
+  });
 });
 
 describe('buildScenarioSession', () => {
