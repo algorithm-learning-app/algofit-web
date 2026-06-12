@@ -5,6 +5,7 @@ import {
 } from './codeLanguage';
 import { DAILY_TOTAL } from './daily';
 import { PC_BONUS_XP } from './pcBonus';
+import { SCENARIO_XP_PER_QUESTION } from './scenario';
 import {
   WORLD1_TOTAL_STAGES,
   WORLD2_TOTAL_STAGES,
@@ -546,6 +547,21 @@ export function completeWorldStage(
     }
   }
 
+  saveProgress(next);
+  return next;
+}
+
+/**
+ * 실전 시나리오 1문항 답안을 진행에 반영한다(모바일 recordScenarioAnswer 미러).
+ * 도메인 규칙: 시나리오는 **XP 만** 지급한다 — 전역 clearedQuestionIds/wrongQuestionIds
+ * (복습 풀·배지 소스, pick/blank id 만 수용)는 절대 건드리지 않는다.
+ * 정답이면 SCENARIO_XP_PER_QUESTION 만큼 XP, 오답이면 0. saveProgress 로 sync push 트리거.
+ */
+export function recordScenarioAnswer(
+  progress: GuestProgress,
+  isCorrect: boolean,
+): GuestProgress {
+  const next = isCorrect ? addXp(progress, SCENARIO_XP_PER_QUESTION) : progress;
   saveProgress(next);
   return next;
 }

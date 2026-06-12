@@ -1,0 +1,98 @@
+.scenario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.scenario__chip {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.scenario__stem {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.scenario__prompt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.scenario__choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.scenario__choice {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radius-btn);
+  border: 2px solid rgba(148, 163, 184, 0.35);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.scenario__choice:hover {
+  border-color: rgba(45, 212, 191, 0.6);
+}
+
+.scenario__choice--selected {
+  border-color: var(--color-primary);
+  background: rgba(45, 212, 191, 0.12);
+}
+
+.scenario__submit {
+  margin-top: var(--space-8);
+}
+
+.scenario__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scenario__empty {
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-16);
+}
+
+/* btn-primary — Scenario 가 Home.css 없이도 동작하도록 자급(World.css 미러). */
+.daily .btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--color-primary);
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* world__stage-label — Scenario 헤더 라벨(World.css 미러). */
+.daily .world__stage-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}

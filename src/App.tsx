@@ -7,6 +7,7 @@ import Profile from './screens/Profile/Profile';
 import PcBonusChallenge from './screens/PcBonus/PcBonusChallenge';
 import WorldMap from './screens/World/WorldMap';
 import StagePlay from './screens/World/StagePlay';
+import Scenario from './screens/Scenario/Scenario';
 import './App.css';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/daily/:step" element={<DailyChallenge />} />
         <Route path="/learn" element={<WorldMap />} />
         <Route path="/learn/:worldId/:stageOrder" element={<StagePlay />} />
+        <Route path="/scenario" element={<Scenario />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/pc-bonus" element={<PcBonusChallenge />} />
         <Route path="/pc-bonus/feedback" element={<PcBonusChallenge />} />
