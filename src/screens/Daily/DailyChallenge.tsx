@@ -97,10 +97,17 @@ export default function DailyChallenge() {
     (isCorrect: boolean) => {
       if (!progress || !session || stepNumber === null) return;
 
+      // 현재 문항 id 를 복습 풀에 반영하기 위해 전달한다(pick/blank).
+      const currentQuestion = getDailyQuestion(
+        stepNumber - 1,
+        new Date(),
+        effectiveCodeLanguage(),
+      );
       const { progress: nextProgress, session: nextSession } = recordDailyAnswer(
         progress,
         session,
         isCorrect,
+        currentQuestion?.id,
       );
       setProgress(nextProgress);
       setSession(nextSession);

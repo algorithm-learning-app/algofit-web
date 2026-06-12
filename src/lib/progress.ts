@@ -37,6 +37,12 @@ export type GuestProgress = {
   world1Nodes: WorldNodeState[];
   world2Nodes: WorldNodeState[];
   world2Unlocked: boolean;
+  /**
+   * 복습 풀(모바일 v6 동기화 필드). pick/blank 정답으로 클리어된 / 오답인 문항 id.
+   * 시나리오 답안은 절대 여기에 들어가지 않는다(XP-only).
+   */
+  clearedQuestionIds: string[];
+  wrongQuestionIds: string[];
   /** PC 보너스(긴 빈칸) 오늘 완료 여부 — 스트릭과 무관 */
   todayPcBonusCompleted?: boolean;
   lastPcBonusDate?: string | null;
@@ -91,6 +97,8 @@ const DEFAULT_PROGRESS: Omit<GuestProgress, 'guestId'> = {
   world1Nodes: defaultWorld1Nodes(),
   world2Nodes: defaultWorld2Nodes(false),
   world2Unlocked: false,
+  clearedQuestionIds: [],
+  wrongQuestionIds: [],
   todayPcBonusCompleted: false,
   lastPcBonusDate: null,
 };
@@ -137,6 +145,11 @@ function normalizeWorldNodes(
 
 function clearedCount(nodes: WorldNodeState[]): number {
   return nodes.filter((n) => n === 'cleared').length;
+}
+
+/** 저장된 문자열 id 배열을 보존한다(모바일 복습 풀). 배열이 아니면 []. */
+function parseStringIds(raw: unknown): string[] {
+  return Array.isArray(raw) ? raw.filter((v): v is string => typeof v === 'string') : [];
 }
 
 function createGuestId(): string {
@@ -225,6 +238,10 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
     world1Nodes,
     world2Nodes,
     world2Unlocked,
+    // 저장된 복습 풀(모바일 v6 동기화 blob)을 보존한다 — world1Nodes 와 동일하게
+    // Array.isArray 가드로 읽어, 동기화된 blob 의 cleared/wrong 가 손상되지 않게 한다.
+    clearedQuestionIds: parseStringIds(parsed.clearedQuestionIds),
+    wrongQuestionIds: parseStringIds(parsed.wrongQuestionIds),
     todayPcBonusCompleted: Boolean(parsed.todayPcBonusCompleted),
     lastPcBonusDate:
       typeof parsed.lastPcBonusDate === 'string' ? parsed.lastPcBonusDate : null,
@@ -291,13 +308,25 @@ export function setOnSaved(cb: (() => void) | null): void {
 }
 
 export function saveProgress(progress: GuestProgress): void {
-  // 웹이 모르는 필드(모바일 v6: world2Nodes/scenario/badges/cleared·wrong ids 등)는
-  // 보존하고 웹이 관리하는 필드만 덮어쓴다 → 같은 guestId 의 모바일 진행을 손상시키지 않는다.
-  const merged = {
-    ...loadRawProgress(),
-    ...progress,
+  // 웹이 모르는 필드(모바일 v6: scenario/badges 등)는 보존하고 웹이 관리하는 필드만
+  // 덮어쓴다 → 같은 guestId 의 모바일 진행을 손상시키지 않는다.
+  // 복습 풀(cleared/wrong)은 first-class 다. 빈 배열이면서 기존 blob 에도 그 키가
+  // 없었던 경우에만 직렬화에서 제외해, 키가 없던 blob 에 빈 배열을 새로 주입하지 않는다
+  // (시나리오 XP-only 가드 보존). 반대로 기존에 값이 있던 키는 빈 배열이라도 직렬화해
+  // 복습에서 마지막 오답을 비웠을 때 패스스루 부활을 막는다.
+  const raw = loadRawProgress();
+  const { clearedQuestionIds, wrongQuestionIds, ...rest } = progress;
+  const merged: Record<string, unknown> = {
+    ...raw,
+    ...rest,
     schemaVersion: SCHEMA_VERSION,
   };
+  if (clearedQuestionIds.length > 0 || 'clearedQuestionIds' in raw) {
+    merged.clearedQuestionIds = clearedQuestionIds;
+  }
+  if (wrongQuestionIds.length > 0 || 'wrongQuestionIds' in raw) {
+    merged.wrongQuestionIds = wrongQuestionIds;
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
   if (progress.preferredCodeLanguage) {
     localStorage.setItem(
@@ -388,10 +417,80 @@ export function addXp(progress: GuestProgress, amount: number): GuestProgress {
   return { ...progress, xp, level, xpToNextLevel };
 }
 
+/** 순서를 보존하며 여러 id 배열을 합집합으로 합친다(중복 제거). */
+function unionIds(...lists: string[][]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const list of lists) {
+    for (const id of list) {
+      if (!seen.has(id)) {
+        seen.add(id);
+        out.push(id);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * 저장된 원본 blob 에서 현재 복습 풀을 신선하게 읽는다(가드 적용).
+ * 인메모리 스냅샷이 stale 일 수 있으므로, 풀 변형 시 이 신선한 값과 union 해
+ * 백그라운드 sync adopt 가 키운 풀을 줄어들게 하지 않는다(stale-snapshot clobber 방지).
+ */
+function loadStoredPools(): { cleared: string[]; wrong: string[] } {
+  const raw = loadRawProgress();
+  return {
+    cleared: parseStringIds(raw.clearedQuestionIds),
+    wrong: parseStringIds(raw.wrongQuestionIds),
+  };
+}
+
+/**
+ * 복습 풀에 정답 문항을 반영한다(모바일 progress_math.withQuestionCleared 미러).
+ * clearedQuestionIds 에 추가(중복 방지)하고 wrongQuestionIds 에서 제거한다.
+ * questionId 가 없으면 변경 없이 그대로 반환한다.
+ *
+ * 풀은 저장된 신선한 값과 union 한 뒤 이 호출의 단일 id 델타만 적용한다 —
+ * stale 한 progress 스냅샷이 다른 id 들의 동시 추가를 덮어써(축소) sync 로
+ * 전파되는 것을 막는다.
+ */
+export function withQuestionCleared(
+  progress: GuestProgress,
+  questionId: string | null | undefined,
+): GuestProgress {
+  if (!questionId) return progress;
+  const stored = loadStoredPools();
+  // cleared = union(저장값, 스냅샷, [id]) / wrong = union(저장값, 스냅샷) minus [id]
+  const cleared = unionIds(stored.cleared, progress.clearedQuestionIds, [questionId]);
+  const wrong = unionIds(stored.wrong, progress.wrongQuestionIds).filter(
+    (id) => id !== questionId,
+  );
+  return { ...progress, clearedQuestionIds: cleared, wrongQuestionIds: wrong };
+}
+
+/**
+ * 복습 풀에 오답 문항을 반영한다(모바일 recordDailyAnswer 오답 경로 미러).
+ * wrongQuestionIds 에 추가(중복 방지). cleared 는 건드리지 않는다.
+ *
+ * cleared 와 마찬가지로 저장된 신선한 값과 union 해 동시 추가가 축소되지 않게 한다.
+ */
+export function withQuestionWrong(
+  progress: GuestProgress,
+  questionId: string | null | undefined,
+): GuestProgress {
+  if (!questionId) return progress;
+  const stored = loadStoredPools();
+  // wrong = union(저장값, 스냅샷, [id]) / cleared = union(저장값, 스냅샷) (그대로 보존)
+  const wrong = unionIds(stored.wrong, progress.wrongQuestionIds, [questionId]);
+  const cleared = unionIds(stored.cleared, progress.clearedQuestionIds);
+  return { ...progress, clearedQuestionIds: cleared, wrongQuestionIds: wrong };
+}
+
 export function recordDailyAnswer(
   progress: GuestProgress,
   session: DailySession,
   isCorrect: boolean,
+  questionId?: string,
 ): { progress: GuestProgress; session: DailySession } {
   const xpGain = 10;
   const nextSession: DailySession = {
@@ -407,10 +506,33 @@ export function recordDailyAnswer(
     ...nextProgress,
     dailyProgress: nextSession.answers.length,
   };
+  // pick/blank 답안만 복습 풀을 채운다(모바일 recordDailyAnswer 미러).
+  if (questionId) {
+    nextProgress = isCorrect
+      ? withQuestionCleared(nextProgress, questionId)
+      : withQuestionWrong(nextProgress, questionId);
+  }
 
   saveDailySession(nextSession);
   saveProgress(nextProgress);
   return { progress: nextProgress, session: nextSession };
+}
+
+/**
+ * 복습 화면에서 한 문항을 다시 푼 결과를 진행에 반영하고 저장한다
+ * (모바일 recordQuestionOutcome 미러 — XP·하트 없음, 복습 풀만 갱신).
+ * 정답: cleared 에 추가 + wrong 에서 제거. 오답: wrong 에 추가(이미 있으면 무변경).
+ */
+export function recordReviewAnswer(
+  progress: GuestProgress,
+  questionId: string,
+  isCorrect: boolean,
+): GuestProgress {
+  const next = isCorrect
+    ? withQuestionCleared(progress, questionId)
+    : withQuestionWrong(progress, questionId);
+  saveProgress(next);
+  return next;
 }
 
 export function advanceAfterFeedback(
@@ -510,6 +632,7 @@ export function completeWorldStage(
   progress: GuestProgress,
   worldId: number,
   stageOrder: number,
+  questionIds: string[] = [],
 ): GuestProgress {
   const def = worldById(worldId);
   if (!def) return progress;
@@ -526,6 +649,12 @@ export function completeWorldStage(
   const updatedNodes = advanceNodesAfterClear(nodes, stageOrder, stageCount);
 
   let next: GuestProgress = addXp(progress, STAGE_XP_PER_QUESTION);
+
+  // 스테이지 클리어 시 해당 문항 id 를 복습 풀에 cleared 로 반영(모바일 completeStage 미러).
+  // pick/blank 스테이지 문항만 전달되며, 시나리오는 이 경로를 타지 않는다.
+  for (const id of questionIds) {
+    next = withQuestionCleared(next, id);
+  }
 
   next =
     worldId === 1

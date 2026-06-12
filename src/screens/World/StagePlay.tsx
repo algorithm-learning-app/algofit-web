@@ -7,6 +7,7 @@ import {
   isWorldPlayable,
   loadProgress,
   nodesForWorld,
+  recordReviewAnswer,
   STAGE_XP_PER_QUESTION,
   type WorldNodeState,
 } from '../../lib/progress';
@@ -54,6 +55,13 @@ export default function StagePlay() {
   }
 
   function handleSubmit(isCorrect: boolean) {
+    // 모바일 recordQuestionOutcome 미러: 매 답안을 복습 풀에 기록한다(XP·하트 없음).
+    // 정답 → cleared 추가 + wrong 제거, 오답 → wrong 추가. 모두 fix#1 의 델타 경로를
+    // 거쳐 동시 sync 추가를 축소하지 않는다. 스테이지 노드/XP 는 completeWorldStage 가 담당.
+    // (웹 StagePlay 는 하트 모델이 없어 하트 차감은 생략 — 복습 풀 기록이 패리티 목표.)
+    if (question) {
+      recordReviewAnswer(loadProgress(), question.id, isCorrect);
+    }
     setLastCorrect(isCorrect);
     setShowFeedback(true);
   }
@@ -74,8 +82,14 @@ export default function StagePlay() {
       return;
     }
     // 세트 전부 정답 → 스테이지 클리어. 클리어 시점의 최신 진행을 다시 읽어 반영한다.
+    // 스테이지의 pick/blank 문항 id 를 복습 풀에 cleared 로 반영(모바일 completeStage 미러).
     if (stage) {
-      completeWorldStage(loadProgress(), worldId, stage.order);
+      completeWorldStage(
+        loadProgress(),
+        worldId,
+        stage.order,
+        questions.map((q) => q.id),
+      );
     }
     setShowFeedback(false);
     setComplete(true);

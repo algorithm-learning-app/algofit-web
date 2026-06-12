@@ -1,0 +1,117 @@
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.review__count {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.review__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.review__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radius-btn);
+  border: 2px solid rgba(148, 163, 184, 0.35);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.review__item:hover {
+  border-color: rgba(45, 212, 191, 0.6);
+}
+
+.review__item-badge {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--color-primary);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.review__item-stem {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review__item-arrow {
+  flex: none;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.review__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
+}
+
+.review__empty-icon {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.review__empty-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.review__empty-desc {
+  margin: 0 0 var(--space-8);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+/* btn-primary — Review 가 Home.css 없이도 동작하도록 자급(Scenario.css 미러). */
+.daily .btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--color-primary);
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* world__stage-label — Review 헤더 라벨(Scenario.css 미러). */
+.daily .world__stage-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
