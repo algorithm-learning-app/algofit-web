@@ -74,8 +74,14 @@ export default function StagePlay() {
       return;
     }
     // 세트 전부 정답 → 스테이지 클리어. 클리어 시점의 최신 진행을 다시 읽어 반영한다.
+    // 스테이지의 pick/blank 문항 id 를 복습 풀에 cleared 로 반영(모바일 completeStage 미러).
     if (stage) {
-      completeWorldStage(loadProgress(), worldId, stage.order);
+      completeWorldStage(
+        loadProgress(),
+        worldId,
+        stage.order,
+        questions.map((q) => q.id),
+      );
     }
     setShowFeedback(false);
     setComplete(true);

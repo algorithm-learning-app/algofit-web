@@ -226,6 +226,32 @@ export function getDailyQuestion(
   return getDailyPack(reference, preferredLanguage).questions[index];
 }
 
+/**
+ * id 로 pick/blank 풀에서 단일 문항을 찾는다(모바일 getQuestionById 미러).
+ * 풀에 없는 id(스테일/미지)는 null 을 반환한다.
+ */
+export function getQuestionById(id: string): DailyQuestion | null {
+  const { picks, blanks } = loadQuestionPools();
+  return picks.find((q) => q.id === id) ?? blanks.find((q) => q.id === id) ?? null;
+}
+
+/**
+ * id 목록을 실제 pick/blank 문항으로 해석한다. 풀에 존재하는 id 만 입력 순서대로 반환한다
+ * (스테일/미지 id 는 graceful 하게 무시 — 복습 화면 resolver).
+ */
+export function resolveQuestionsByIds(ids: string[]): DailyQuestion[] {
+  const { picks, blanks } = loadQuestionPools();
+  const byId = new Map<string, DailyQuestion>();
+  for (const q of picks) byId.set(q.id, q);
+  for (const q of blanks) byId.set(q.id, q);
+  const out: DailyQuestion[] = [];
+  for (const id of ids) {
+    const found = byId.get(id);
+    if (found) out.push(found);
+  }
+  return out;
+}
+
 export function isPickQuestion(q: DailyQuestion): q is PickQuestion {
   return q.type === 'pick';
 }

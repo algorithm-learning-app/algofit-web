@@ -145,6 +145,21 @@ export default function Home() {
           </span>
         </Link>
 
+        <Link to="/review" className="scenario-card">
+          <span className="scenario-card__badge">복습</span>
+          <div className="scenario-card__body">
+            <p className="scenario-card__title">오답 복습</p>
+            <p className="scenario-card__desc">
+              {progress.wrongQuestionIds.length > 0
+                ? `다시 풀 오답 ${progress.wrongQuestionIds.length}개 · Daily·스테이지에서 틀린 문항`
+                : '틀린 문항이 여기에 쌓여요 · 지금은 비어 있어요'}
+            </p>
+          </div>
+          <span className="scenario-card__arrow" aria-hidden>
+            →
+          </span>
+        </Link>
+
         <section className="world-preview" aria-labelledby="world-title">
           <div className="world-preview__head">
             <h2 id="world-title" className="world-preview__title">
