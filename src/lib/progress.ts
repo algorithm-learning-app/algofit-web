@@ -5,6 +5,12 @@ import {
 } from './codeLanguage';
 import { DAILY_TOTAL } from './daily';
 import { PC_BONUS_XP } from './pcBonus';
+import {
+  WORLD1_TOTAL_STAGES,
+  WORLD2_TOTAL_STAGES,
+  WORLD2_UNLOCK_CLEARED_COUNT,
+  worldById,
+} from '../content/worldStages';
 
 const STORAGE_KEY = 'algofit:guestProgress';
 export { effectiveCodeLanguage, loadPreferredCodeLanguage };
@@ -27,11 +33,31 @@ export type GuestProgress = {
   dailyPickCount: number;
   dailyBlankCount: number;
   hearts: number;
-  world1Nodes: Array<'locked' | 'current' | 'cleared'>;
+  world1Nodes: WorldNodeState[];
+  world2Nodes: WorldNodeState[];
+  world2Unlocked: boolean;
   /** PC 보너스(긴 빈칸) 오늘 완료 여부 — 스트릭과 무관 */
   todayPcBonusCompleted?: boolean;
   lastPcBonusDate?: string | null;
 };
+
+export type WorldNodeState = 'locked' | 'current' | 'cleared';
+
+/** World 1 기본 노드(20개) — 첫 번째 current, 나머지 locked. */
+function defaultWorld1Nodes(): WorldNodeState[] {
+  return makeDefaultNodes(WORLD1_TOTAL_STAGES, true);
+}
+
+/** World 2 기본 노드(15개) — 해금이면 첫 current, 아니면 전부 locked. */
+function defaultWorld2Nodes(unlocked: boolean): WorldNodeState[] {
+  return makeDefaultNodes(WORLD2_TOTAL_STAGES, unlocked);
+}
+
+function makeDefaultNodes(count: number, firstCurrent: boolean): WorldNodeState[] {
+  return Array.from({ length: count }, (_, i) =>
+    i === 0 && firstCurrent ? 'current' : 'locked',
+  );
+}
 
 export type DailySession = {
   questionIndex: number;
@@ -61,10 +87,56 @@ const DEFAULT_PROGRESS: Omit<GuestProgress, 'guestId'> = {
   dailyPickCount: 3,
   dailyBlankCount: 2,
   hearts: 5,
-  world1Nodes: ['cleared', 'current', 'locked', 'locked', 'locked'],
+  world1Nodes: defaultWorld1Nodes(),
+  world2Nodes: defaultWorld2Nodes(false),
+  world2Unlocked: false,
   todayPcBonusCompleted: false,
   lastPcBonusDate: null,
 };
+
+const WORLD_NODE_STATES: readonly WorldNodeState[] = ['locked', 'current', 'cleared'];
+
+function parseWorldNode(raw: unknown): WorldNodeState {
+  return WORLD_NODE_STATES.includes(raw as WorldNodeState)
+    ? (raw as WorldNodeState)
+    : 'locked';
+}
+
+/**
+ * 저장된 노드 배열을 스테이지 수에 맞춰 정규화한다(모바일 _normalizeWorld2Nodes 미러).
+ * - 짧으면 'locked' 로 패딩, 길면 잘라낸다.
+ * - 미지 문자열은 'locked' 로.
+ * - 승격 규칙(모바일 동일): 저장 길이 oldLen 이 0 < oldLen < stageCount 이고
+ *   기존 항목이 *전부* cleared 인 경우에만, 첫 패딩 슬롯 nodes[oldLen] 을 current 로 승격한다.
+ *   부분 진행(일부 cleared, current 없음)은 합성된 current 를 만들지 않는다.
+ */
+function normalizeWorldNodes(
+  raw: unknown,
+  stageCount: number,
+  fallback: WorldNodeState[],
+): WorldNodeState[] {
+  if (!Array.isArray(raw)) return [...fallback];
+  const parsed = raw.map(parseWorldNode);
+
+  // 더 긴 배열은 잘라내고 반환(트림). 패딩 후 승격 로직은 적용하지 않는다.
+  if (parsed.length >= stageCount) return parsed.slice(0, stageCount);
+
+  const oldLen = parsed.length;
+  const allOldCleared = oldLen > 0 && parsed.every((n) => n === 'cleared');
+
+  const nodes = [...parsed];
+  while (nodes.length < stageCount) nodes.push('locked');
+
+  // 기존 항목이 전부 cleared 일 때만 첫 패딩 슬롯을 current 로 승격.
+  if (allOldCleared && oldLen < stageCount) {
+    nodes[oldLen] = 'current';
+  }
+  return nodes;
+}
+
+function clearedCount(nodes: WorldNodeState[]): number {
+  return nodes.filter((n) => n === 'cleared').length;
+}
 
 function createGuestId(): string {
   return crypto.randomUUID();
@@ -103,6 +175,22 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
       ? parsed.preferredCodeLanguage
       : loadPreferredCodeLanguage();
 
+  // 저장된 노드 배열(모바일 20/15, 레거시 웹 5)을 보존하되 스테이지 수로 정규화한다.
+  const world1Nodes = normalizeWorldNodes(
+    parsed.world1Nodes,
+    WORLD1_TOTAL_STAGES,
+    defaultWorld1Nodes(),
+  );
+  const world2Unlocked =
+    typeof parsed.world2Unlocked === 'boolean'
+      ? parsed.world2Unlocked
+      : clearedCount(world1Nodes) >= WORLD2_UNLOCK_CLEARED_COUNT;
+  const world2Nodes = normalizeWorldNodes(
+    parsed.world2Nodes,
+    WORLD2_TOTAL_STAGES,
+    defaultWorld2Nodes(world2Unlocked),
+  );
+
   return {
     ...DEFAULT_PROGRESS,
     guestId,
@@ -133,9 +221,9 @@ function migrateLegacy(parsed: Record<string, unknown>): GuestProgress {
         ? parsed.dailyBlankCount
         : DEFAULT_PROGRESS.dailyBlankCount,
     hearts: typeof parsed.hearts === 'number' ? parsed.hearts : 5,
-    world1Nodes: Array.isArray(parsed.world1Nodes)
-      ? (parsed.world1Nodes as GuestProgress['world1Nodes'])
-      : DEFAULT_PROGRESS.world1Nodes,
+    world1Nodes,
+    world2Nodes,
+    world2Unlocked,
     todayPcBonusCompleted: Boolean(parsed.todayPcBonusCompleted),
     lastPcBonusDate:
       typeof parsed.lastPcBonusDate === 'string' ? parsed.lastPcBonusDate : null,
@@ -367,6 +455,98 @@ export function completeDailyChallenge(
 
   saveProgress(next);
   saveDailySession(null);
+  return next;
+}
+
+/**
+ * 스테이지 클리어 1회당 정액 XP — 모바일 stageXpPerQuestion(=10) 과 동일.
+ * 모바일 completeStage 는 세트 크기와 무관하게 클리어당 10 XP 를 정액 지급한다.
+ */
+export const STAGE_XP_PER_QUESTION = 10;
+
+export function nodesForWorld(progress: GuestProgress, worldId: number): WorldNodeState[] {
+  if (worldId === 1) return progress.world1Nodes;
+  if (worldId === 2) return progress.world2Nodes;
+  return [];
+}
+
+export function isWorldPlayable(progress: GuestProgress, worldId: number): boolean {
+  const def = worldById(worldId);
+  if (!def) return false;
+  if (def.unlockAfterWorld1Cleared == null) return true;
+  return progress.world2Unlocked;
+}
+
+/** 스테이지 클리어 후 맵 노드 갱신 (order 는 1-based). 모바일 advanceWorldNodesAfterClear 미러. */
+function advanceNodesAfterClear(
+  nodes: WorldNodeState[],
+  clearedStageOrder: number,
+  stageCount: number,
+): WorldNodeState[] {
+  const result = [...nodes];
+  while (result.length < stageCount) result.push('locked');
+
+  const idx = clearedStageOrder - 1;
+  if (idx < 0 || idx >= result.length) return result;
+
+  result[idx] = 'cleared';
+  const nextIdx = idx + 1;
+  if (nextIdx < result.length && result[nextIdx] === 'locked') {
+    result[nextIdx] = 'current';
+  }
+  return result;
+}
+
+/**
+ * 스테이지 클리어를 진행에 반영한다(모바일 WorldProgressService.completeStage 미러).
+ * - 노드를 cleared 로, 다음 노드를 current 로 승격.
+ * - World 1 클리어 수 >= 7 이면 World 2 해금.
+ * - XP 지급: 클리어당 정액 STAGE_XP_PER_QUESTION(=10). 세트 크기와 무관(모바일 미러).
+ *   이미 클리어한 스테이지는 XP 0 + 노드 무변경(멱등 — 모바일 alreadyCleared).
+ * - saveProgress 호출 → sync push 트리거.
+ */
+export function completeWorldStage(
+  progress: GuestProgress,
+  worldId: number,
+  stageOrder: number,
+): GuestProgress {
+  const def = worldById(worldId);
+  if (!def) return progress;
+  if (!isWorldPlayable(progress, worldId)) return progress;
+
+  const stageCount = def.stages.length;
+  const nodes = nodesForWorld(progress, worldId);
+  const idx = stageOrder - 1;
+  const alreadyCleared = idx >= 0 && idx < nodes.length && nodes[idx] === 'cleared';
+
+  // 이미 클리어된 스테이지는 멱등: XP·노드 모두 그대로 두고 진행을 변경하지 않는다.
+  if (alreadyCleared) return progress;
+
+  const updatedNodes = advanceNodesAfterClear(nodes, stageOrder, stageCount);
+
+  let next: GuestProgress = addXp(progress, STAGE_XP_PER_QUESTION);
+
+  next =
+    worldId === 1
+      ? { ...next, world1Nodes: updatedNodes }
+      : { ...next, world2Nodes: updatedNodes };
+
+  if (worldId === 1) {
+    const threshold = worldById(2)?.unlockAfterWorld1Cleared;
+    if (
+      threshold != null &&
+      clearedCount(updatedNodes) >= threshold &&
+      !next.world2Unlocked
+    ) {
+      next = {
+        ...next,
+        world2Unlocked: true,
+        world2Nodes: defaultWorld2Nodes(true),
+      };
+    }
+  }
+
+  saveProgress(next);
   return next;
 }
 

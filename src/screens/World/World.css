@@ -1,0 +1,192 @@
+.world {
+  width: 100%;
+  max-width: var(--max-width);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-16) 96px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.world__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.world__back {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.world__count {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--color-primary);
+}
+
+.world__chips {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.world__chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.35);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.world__chip--active {
+  border-color: var(--color-primary);
+  background: rgba(45, 212, 191, 0.12);
+  color: var(--color-primary);
+}
+
+.world__chip--locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.world__title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 800;
+}
+
+.world__subtitle {
+  margin: -8px 0 0;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.world__map {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.world__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.world__row--right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.world__row-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.world__stage-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.world__empty,
+.world__locked-text {
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.world__locked {
+  text-align: center;
+  padding: var(--space-24) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.world__locked-icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin: 0;
+}
+
+/* 맵 노드 — Home 미리보기와 동일한 시각 언어를 World 라우트에서도 자급한다. */
+.world-node {
+  position: relative;
+  z-index: 1;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--color-bg);
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.world-node:disabled {
+  cursor: not-allowed;
+}
+
+.world-node--cleared {
+  background: rgba(45, 212, 191, 0.2);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.world-node--current {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #0f172a;
+  box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.3);
+}
+
+.world-node--locked {
+  opacity: 0.55;
+}
+
+.world-node__num {
+  line-height: 1;
+}
+
+/* btn-primary — World/StagePlay 가 Home.css 없이도 동작하도록 자급. */
+.world .btn-primary,
+.world__locked .btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--color-primary);
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
