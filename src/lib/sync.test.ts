@@ -140,7 +140,7 @@ describe('passthrough (모바일 v6 필드 보존)', () => {
         schemaVersion: 6,
         guestId: 'g1',
         xp: 0,
-        world2Nodes: ['cleared'],
+        scenarioNodes: ['cleared'],
         unlockedBadgeIds: ['correct_10'],
       }),
     );
@@ -150,8 +150,8 @@ describe('passthrough (모바일 v6 필드 보존)', () => {
     const raw = loadRawProgress();
     expect(raw.xp).toBe(123);
     expect(raw.schemaVersion).toBe(6);
-    // 웹이 건드리지 않는 모바일 필드가 살아남음
-    expect(raw.world2Nodes).toEqual(['cleared']);
+    // 웹이 건드리지 않는 모바일 미지 필드가 살아남음
+    expect(raw.scenarioNodes).toEqual(['cleared']);
     expect(raw.unlockedBadgeIds).toEqual(['correct_10']);
   });
 

@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from './screens/Home/Home';
 import DailyChallenge from './screens/Daily/DailyChallenge';
 import Continue from './screens/Continue/Continue';
 import Profile from './screens/Profile/Profile';
 import PcBonusChallenge from './screens/PcBonus/PcBonusChallenge';
+import WorldMap from './screens/World/WorldMap';
+import StagePlay from './screens/World/StagePlay';
 import './App.css';
-
-function Placeholder({ title }: { title: string }) {
-  return (
-    <div className="placeholder">
-      <p>{title}</p>
-      <Link to="/home">홈으로</Link>
-    </div>
-  );
-}
 
 export default function App() {
   // 서버 진행 채택(adopt) 시 화면들이 loadProgress() 를 다시 읽도록 라우트를 재마운트한다.
@@ -35,7 +28,8 @@ export default function App() {
         <Route path="/daily/complete" element={<DailyChallenge />} />
         <Route path="/daily/:step/feedback" element={<DailyChallenge />} />
         <Route path="/daily/:step" element={<DailyChallenge />} />
-        <Route path="/learn" element={<Placeholder title="학습 (준비 중)" />} />
+        <Route path="/learn" element={<WorldMap />} />
+        <Route path="/learn/:worldId/:stageOrder" element={<StagePlay />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/pc-bonus" element={<PcBonusChallenge />} />
         <Route path="/pc-bonus/feedback" element={<PcBonusChallenge />} />
