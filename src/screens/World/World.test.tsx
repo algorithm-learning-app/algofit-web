@@ -104,4 +104,30 @@ describe('StagePlay 화면', () => {
     renderApp('/learn/1/5'); // stage 5 = locked
     expect(screen.getByText(/잠긴 스테이지/)).toBeInTheDocument();
   });
+
+  it('스테이지 문항을 틀리면 해당 id 가 wrongQuestionIds 에 기록된다(모바일 패리티)', () => {
+    loadProgress();
+    renderApp('/learn/1/1');
+
+    const questions = resolveStageQuestions('stage_w1_01');
+    const first = questions[0];
+    // 첫 문항을 오답으로 푼다(pick: 오답 선택지, blank: 오답 조합).
+    if (isPickQuestion(first)) {
+      const wrong = first.choices.find((c) => !checkPickAnswer(first, c.id))!;
+      fireEvent.click(screen.getByText(wrong.label));
+    } else {
+      for (const slot of first.blanks) {
+        const wrongChoice =
+          slot.choices.find((c) => !slot.correctAnswers.includes(c)) ?? slot.choices[0];
+        const buttons = screen.getAllByText(wrongChoice);
+        fireEvent.click(buttons[buttons.length - 1]);
+      }
+    }
+    fireEvent.click(screen.getByRole('button', { name: '확인' }));
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!) as {
+      wrongQuestionIds?: string[];
+    };
+    expect(saved.wrongQuestionIds).toContain(first.id);
+  });
 });

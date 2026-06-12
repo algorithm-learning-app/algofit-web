@@ -88,10 +88,14 @@ function withFeedback<T extends PickQuestion | BlankQuestion>(q: T): T {
   };
 }
 
+let cachedPools: QuestionPools | null = null;
+
 export function loadQuestionPools(): QuestionPools {
-  const picks = (pickBundle.questions as PickQuestion[]).map(withFeedback);
-  const blanks = (blankBundle.questions as BlankQuestion[]).map(withFeedback);
-  return { picks, blanks };
+  // 풀(withFeedback 매핑)은 번들 정적 데이터에서 한 번만 빌드해 모듈 스코프에 캐시한다.
+  return (cachedPools ??= {
+    picks: (pickBundle.questions as PickQuestion[]).map(withFeedback),
+    blanks: (blankBundle.questions as BlankQuestion[]).map(withFeedback),
+  });
 }
 
 export function filterBlanksByLanguage(

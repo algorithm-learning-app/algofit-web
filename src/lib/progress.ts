@@ -417,37 +417,73 @@ export function addXp(progress: GuestProgress, amount: number): GuestProgress {
   return { ...progress, xp, level, xpToNextLevel };
 }
 
+/** 순서를 보존하며 여러 id 배열을 합집합으로 합친다(중복 제거). */
+function unionIds(...lists: string[][]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const list of lists) {
+    for (const id of list) {
+      if (!seen.has(id)) {
+        seen.add(id);
+        out.push(id);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * 저장된 원본 blob 에서 현재 복습 풀을 신선하게 읽는다(가드 적용).
+ * 인메모리 스냅샷이 stale 일 수 있으므로, 풀 변형 시 이 신선한 값과 union 해
+ * 백그라운드 sync adopt 가 키운 풀을 줄어들게 하지 않는다(stale-snapshot clobber 방지).
+ */
+function loadStoredPools(): { cleared: string[]; wrong: string[] } {
+  const raw = loadRawProgress();
+  return {
+    cleared: parseStringIds(raw.clearedQuestionIds),
+    wrong: parseStringIds(raw.wrongQuestionIds),
+  };
+}
+
 /**
  * 복습 풀에 정답 문항을 반영한다(모바일 progress_math.withQuestionCleared 미러).
  * clearedQuestionIds 에 추가(중복 방지)하고 wrongQuestionIds 에서 제거한다.
  * questionId 가 없으면 변경 없이 그대로 반환한다.
+ *
+ * 풀은 저장된 신선한 값과 union 한 뒤 이 호출의 단일 id 델타만 적용한다 —
+ * stale 한 progress 스냅샷이 다른 id 들의 동시 추가를 덮어써(축소) sync 로
+ * 전파되는 것을 막는다.
  */
 export function withQuestionCleared(
   progress: GuestProgress,
   questionId: string | null | undefined,
 ): GuestProgress {
   if (!questionId) return progress;
-  const cleared = progress.clearedQuestionIds.includes(questionId)
-    ? progress.clearedQuestionIds
-    : [...progress.clearedQuestionIds, questionId];
-  const wrong = progress.wrongQuestionIds.filter((id) => id !== questionId);
+  const stored = loadStoredPools();
+  // cleared = union(저장값, 스냅샷, [id]) / wrong = union(저장값, 스냅샷) minus [id]
+  const cleared = unionIds(stored.cleared, progress.clearedQuestionIds, [questionId]);
+  const wrong = unionIds(stored.wrong, progress.wrongQuestionIds).filter(
+    (id) => id !== questionId,
+  );
   return { ...progress, clearedQuestionIds: cleared, wrongQuestionIds: wrong };
 }
 
 /**
  * 복습 풀에 오답 문항을 반영한다(모바일 recordDailyAnswer 오답 경로 미러).
  * wrongQuestionIds 에 추가(중복 방지). cleared 는 건드리지 않는다.
+ *
+ * cleared 와 마찬가지로 저장된 신선한 값과 union 해 동시 추가가 축소되지 않게 한다.
  */
 export function withQuestionWrong(
   progress: GuestProgress,
   questionId: string | null | undefined,
 ): GuestProgress {
   if (!questionId) return progress;
-  if (progress.wrongQuestionIds.includes(questionId)) return progress;
-  return {
-    ...progress,
-    wrongQuestionIds: [...progress.wrongQuestionIds, questionId],
-  };
+  const stored = loadStoredPools();
+  // wrong = union(저장값, 스냅샷, [id]) / cleared = union(저장값, 스냅샷) (그대로 보존)
+  const wrong = unionIds(stored.wrong, progress.wrongQuestionIds, [questionId]);
+  const cleared = unionIds(stored.cleared, progress.clearedQuestionIds);
+  return { ...progress, clearedQuestionIds: cleared, wrongQuestionIds: wrong };
 }
 
 export function recordDailyAnswer(

@@ -49,6 +49,79 @@ describe('withQuestionCleared / withQuestionWrong', () => {
   });
 });
 
+describe('델타 기반 풀 변형(stale-snapshot clobber 방지)', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('저장된 큰 풀 + stale 한 작은 스냅샷으로 cleared 추가 시 기존 id 가 줄지 않는다', () => {
+    // 백그라운드 sync adopt 가 저장소의 cleared 풀을 5개로 키운 상황을 시뮬레이션.
+    const adopted = ['a1', 'a2', 'a3', 'a4', 'a5'];
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 6,
+        xp: 0,
+        level: 1,
+        xpToNextLevel: 100,
+        clearedQuestionIds: adopted,
+        wrongQuestionIds: [],
+      }),
+    );
+    // adopt 이전에 캡처된 stale 스냅샷(작은/빈 풀) + 새 id 1개.
+    const stale = { ...loadProgress(), clearedQuestionIds: [], wrongQuestionIds: [] };
+    const next = withQuestionCleared(stale, 'new_id');
+    // 기존 5개 보존 + 새 id 추가 (축소 없음).
+    expect(next.clearedQuestionIds).toEqual(
+      expect.arrayContaining([...adopted, 'new_id']),
+    );
+    expect(next.clearedQuestionIds).toHaveLength(6);
+  });
+
+  it('저장된 큰 풀 + stale 한 작은 스냅샷으로 wrong 추가 시 기존 id 가 줄지 않는다', () => {
+    const adopted = ['w1', 'w2', 'w3', 'w4', 'w5'];
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 6,
+        xp: 0,
+        level: 1,
+        xpToNextLevel: 100,
+        clearedQuestionIds: [],
+        wrongQuestionIds: adopted,
+      }),
+    );
+    const stale = { ...loadProgress(), clearedQuestionIds: [], wrongQuestionIds: [] };
+    const next = withQuestionWrong(stale, 'new_wrong');
+    expect(next.wrongQuestionIds).toEqual(
+      expect.arrayContaining([...adopted, 'new_wrong']),
+    );
+    expect(next.wrongQuestionIds).toHaveLength(6);
+  });
+
+  it('복습에서 마지막 오답을 비우면 여전히 빈 배열로 영속된다(델타 후에도)', () => {
+    // 저장소에 단일 오답만 — 정답 처리하면 union(단일 잔여) minus 그 id = [].
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 6,
+        xp: 0,
+        level: 1,
+        xpToNextLevel: 100,
+        wrongQuestionIds: ['only_wrong'],
+      }),
+    );
+    const base = loadProgress();
+    const next = withQuestionCleared(base, 'only_wrong');
+    expect(next.wrongQuestionIds).toEqual([]);
+    expect(next.clearedQuestionIds).toEqual(['only_wrong']);
+    // saveProgress 가 키 존재 시 []도 직렬화하는지(부활 방지) — recordReviewAnswer 경유로 확인.
+    recordReviewAnswer(base, 'only_wrong', true);
+    expect(readStored().wrongQuestionIds).toEqual([]);
+  });
+});
+
 describe('recordDailyAnswer 복습 풀 기록', () => {
   beforeEach(() => {
     localStorage.clear();
